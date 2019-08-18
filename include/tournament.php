@@ -1,5 +1,4 @@
 <?php
-session_start();
 include_once "bootstrap.php";
 date_default_timezone_set('Europe/Paris');
 setlocale(LC_ALL, 'fr_FR', 'fra');
@@ -39,8 +38,8 @@ $matches = $entityManager->getRepository('Match')->findAll();
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Matchs</title>
     <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="css/icon.css">
-    <link rel="stylesheet" href="css/materialize.css">
+    <link rel="stylesheet" href="../public/css/icon.css">
+    <link rel="stylesheet" href="../public/css/materialize.css">
 </head>
 <body>
 <nav>
@@ -124,7 +123,7 @@ $matches = $entityManager->getRepository('Match')->findAll();
         <?php
         if (isset($_SESSION['logged'])) {
             ?>
-            <form action="index.php" method="post">
+            <form action="tournament.php" method="post">
                 <td>
                     <p>
                         <label>
@@ -169,10 +168,10 @@ $matches = $entityManager->getRepository('Match')->findAll();
     </tbody>
 </table>
 
-<?php include_once 'inc/modal.html' ?>
+<?php include_once 'templates/modal.html.twig' ?>
 
 <!-- Compiled and minified JavaScript -->
-<script src="js/materialize.js"></script>
+<script src="../public/js/materialize.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var elem = document.querySelectorAll('.modal');

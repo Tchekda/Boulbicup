@@ -1,0 +1,188 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="css/homepage.css">
+{% endblock %}
+{% block body %}
+    <div id="index-banner" class="parallax-container parallax-container-header">
+        <div class="section section-header">
+            <div class="container">
+                <h1 class="header center white-text" style="font-weight: 700; font-size: 5rem;">#boulbicup</h1>
+                <div class="center video-container">
+                    <iframe src="//www.youtube.com/embed/37nJCS-HJ3w?wmode=opaque"
+                            frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="row center">
+                    <h5 class="header col s12" style="color: #2a2a2a; font-size: 5rem;font-weight: 700">Passion
+                        Hockey</h5>
+                </div>
+            </div>
+            <div class="icons-header">
+                <a href="https://www.facebook.com/www.lestigresdelacbb.fr/" target="_blank"><i
+                            class="fa fa-facebook white-text"></i></a>
+                <a href="https://twitter.com/tigresacbb_off" target="_blank"><i
+                            class="fa fa-twitter white-text"></i></a>
+                <a href="https://www.instagram.com/tigres_acbbhockey_/" target="_blank"><i
+                            class="fa fa-instagram white-text"></i></a>
+                <a href="https://www.youtube.com/channel/UCHvLTpwz6FV-yhSzTynqg0A" target="_blank"><i
+                            class="fa fa-youtube white-text"></i></a>
+            </div>
+        </div>
+        <div class="parallax"><img src="/images/background.png" alt="Unsplashed background img 1"></div>
+    </div>
+
+
+    <div class="container">
+        <div class="section">
+
+            <!--   Icon Section   -->
+            <div class="row center">
+                <div class="col s12 m4">
+                    <div class="icon-block">
+                        <img class="responsive-img" src="/images/boulbicup_logo.png" alt="Boulbicup logo">
+                    </div>
+                </div>
+
+                <div class="col s12 m4">
+                    <div class="icon-block">
+                        <img class="responsive-img" src="/images/acbb_black_logo.png" alt="ACBB logo">
+                    </div>
+                </div>
+
+                <div class="col s12 m4">
+                    <div class="icon-block">
+                        <img class="responsive-img" src="/images/logo.jpg" alt="ACBB logo">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text Section  -->
+            <div class="row">
+                <div class="col m8 s12 center">
+                    <h2>Pour un moment sportif...</h2>
+                    <p>Le club des Tigres de Boulogne Billancourt est heureux de vous inviter à la
+                        {{ ((future_tournaments is defined ? future_tournaments.0.date.0.year : "now")|date('Y') - "01-05-2016"|date('Y')) }}
+                        ème édition de
+                        ses tournois qui se dérouleront respectivement les {# TODO link to tournaments list#}
+                        {% for tournament in future_tournaments%}
+                            {% for day in tournament.date %}
+                                {{ day.day }} {{ day.month }} {{ (loop.last == false and tournament.date|length > 1 ? 'et') }}
+                            {% endfor %}
+                            ({{ tournament.category }}){{ (loop.last == false and future_tournaments|length > 1 ?',') }}
+                        {% else %}
+                            XXX
+                        {% endfor %}
+                        à la patinoire de Boulogne Billancourt.
+                        avec le concours du meilleur dessin en u7, les photos des tournois, le jeu du palet et bien
+                        d'autres surprises !</p>
+                </div>
+
+                <div class="col m4 s12">
+                    <img class="responsive-img" src="images/skates.jpg" alt="Skates">
+                </div>
+            </div>
+
+            <!-- Carousel Section -->
+            <div class="carousel carousel-slider">
+                {% for image in carousel_images %}
+                {% else %}
+                    <img class="carousel-item materialboxed reponsive-img" src="images/logo.jpg" alt="Carousel image">
+                    <img class="carousel-item materialboxed reponsive-img" src="images/boulbicup_logo.png"
+                         alt="Carousel image">
+                    <img class="carousel-item materialboxed reponsive-img" src="images/acbb_black_logo.png"
+                         alt="Carousel image">
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+    <div class="parallax-container valign-wrapper">
+        {#        <div class="section no-pad-bot">#}
+        {#                        <div class="container">#}
+        {#                            <div class="row center">#}
+        {#                                <h5 class="header col s12 light">A modern responsive front-end framework based on Material#}
+        {#                                    Design</h5>#}
+        {#                            </div>#}
+        {#                        </div>#}
+        {#        </div>#}
+        <div class="parallax"><img src="/images/rink.jpg" alt="Unsplashed background img 2"></div>
+    </div>
+
+    <div class="container">
+        <div class="section">
+
+            <div class="row">
+                <div class="col m8 s12 center">
+                    <h2>Nous OKeyons pour le plaisir</h2>
+                    <h5 class="left-align light"> Les <a href="http://www.acbb-hockeysurglace.fr/" target="_blank">Tigres
+                            de l'ACBB</a> est la section section hockey sur glace de
+                        l'<a href="http://www.acbb.fr/" target="_blank">ACBB</a> un club omnisports situé à
+                        <a href="https://fr.wikipedia.org/wiki/Boulogne-Billancourt">Boulogne-Billancourt</a>
+                        (Hauts-de-Seine). ​Le hockey sur glace à l'ACBB
+                        est une très longue histoire de trophées qui se conjugue au présent avec des vocations qui
+                        naissent entre 3 et 4 ans. Grâce aux protections, la chute n'est qu'un épisode drôle. Avec le
+                        label "école de hockey" délivré par la FFHG, l'ACBB s'implique dans l'accueil des plus jeunes et
+                        leur épanouissement. Pour voir briller les yeux de vos enfants, garçons et filles, venez à la
+                        patinoire pour trois séances d'essais avec le prêt du matériel.</h5>
+                </div>
+                <div class="col m4 s12">
+                    <div class="row">
+                        <div class="col m6 12">
+                            <img src="images/acbb_black_logo.png" alt="ACBB Logo" class="responsive-img">
+                        </div>
+                        <div class="col m6 s12">
+                            <img src="images/griffe_black_logo.png" alt="ACBB Logo" class="responsive-img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="parallax-container valign-wrapper">
+        {#        <div class="section no-pad-bot">#}
+        {#            <div class="container">#}
+        {#                <div class="row center">#}
+        {#                    <h5 class="header col s12 light">A modern responsive front-end framework based on Material#}
+        {#                        Design</h5>#}
+        {#                </div>#}
+        {#            </div>#}
+        {#        </div>#}
+        <div class="parallax"><img src="/images/rink.jpg" alt="Unsplashed background img 3"></div>
+    </div>
+
+    <footer class="page-footer orange">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">Boulbicup</h5>
+                    <p class="grey-text text-lighten-4">Boulbi est une série de tournois organisée chaque année pour
+                        différentes catégories d'âge. Ce site a été créer pour pouvoir suivre les résultats des tournois
+                        en cours et voir les photos prises lors de ces évènements</p>
+                </div>
+                <div class="col l3 s12 push-l3">
+                    <h5 class="white-text">Contacts</h5>
+                    <ul>
+                        <li><a class="white-text" href="https://www.facebook.com/www.lestigresdelacbb.fr/">Facebook</a></li>
+                        <li><a class="white-text" href="https://twitter.com/tigresacbb_off">Twitter</a></li>
+                        <li><a class="white-text" href="https://www.instagram.com/tigres_acbbhockey_/">Instagram</a></li>
+                        <li><a class="white-text" href="https://www.youtube.com/channel/UCHvLTpwz6FV-yhSzTynqg0A">Youtube</a></li>
+                        <li><a class="white-text" href="#{# TODO Contact link footer#}">Nous contacter</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                Créé par <a href="https://twitter.com/DavidTchekachev" class="brown-text text-darken-3">David Tchekachev</a> avec <a class="brown-text text-darken-3" href="http://materializecss.com">Materialize</a>
+            </div>
+        </div>
+    </footer>
+
+
+{% endblock %}
+{% block javascripts %}
+    <script src="/js/init.js"></script>
+{% endblock %}
