@@ -9,13 +9,50 @@
     <title>{% block title %}Accueil{% endblock %} - Boulbicup</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="/css/homepage.css">
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
 {% include 'navbar.html.twig' %}
-{% block body %}{% endblock %}
+<main>
+    {% block body %}{% endblock %}
+</main>
+<footer class="page-footer orange">
+    <div class="container">
+        <div class="row">
+            <div class="col l6 s12">
+                <h5 class="white-text">Boulbicup</h5>
+                <p class="grey-text text-lighten-4">Boulbi est une série de tournois organisée chaque année pour
+                    différentes catégories d'âge. Ce site a été créer pour pouvoir suivre les résultats des tournois
+                    en cours et voir les photos prises lors de ces évènements</p>
+            </div>
+            <div class="col l3 s12 push-l3">
+                <h5 class="white-text">Contacts</h5>
+                <ul>
+                    <li><a class="white-text" href="https://www.facebook.com/www.lestigresdelacbb.fr/">Facebook</a></li>
+                    <li><a class="white-text" href="https://twitter.com/tigresacbb_off">Twitter</a></li>
+                    <li><a class="white-text" href="https://www.instagram.com/tigres_acbbhockey_/">Instagram</a></li>
+                    <li><a class="white-text" href="https://www.youtube.com/channel/UCHvLTpwz6FV-yhSzTynqg0A">Youtube</a></li>
+                    <li><a class="white-text" href="#{# TODO Contact link footer#}">Nous contacter</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <div class="container">
+            Créé par <a href="https://twitter.com/DavidTchekachev" class="brown-text text-darken-3">David Tchekachev</a> avec <a class="brown-text text-darken-3" href="http://materializecss.com">Materialize</a>
+        </div>
+    </div>
+</footer>
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    (function ($) {
+        {% for color, message in notifications %}
+        M.toast({html: '{{ message }}', classes: "{{ color }}"});
+        {% endfor %}
+    })(jQuery);
+</script>
 {% block javascripts %}{% endblock %}
 </body>
 </html>

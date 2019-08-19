@@ -1,7 +1,12 @@
 <?php
 
-use Doctrine\Common\Collections\ArrayCollection;
+namespace Entity;
+
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\ManyToOne;
 
 
 /**
@@ -28,27 +33,28 @@ class Match {
     protected $away;
 
     /**
-     * @Column(type="simple_array")
-     * @var int[]
+     * @Column(type="integer")
+     * @var int
      */
-    protected $score;
+    protected $host_score = 0;
 
     /**
-     * @var DateTime
-     * @Column(type="datetime")
+     * @Column(type="integer")
+     * @var int
      */
-    protected $datetime;
-
+    protected $away_score = 0;
 
     /**
-     * @var bool
-     * @Column(type="boolean")
+     * @var \DateInterval
+     * @Column(type="dateinterval")
      */
-    protected $finished = false;
+    protected $time;
 
-    public function __construct() {
-        $this->score = new ArrayCollection();
-    }
+    /**
+     * @var Tournament
+     * @ORM\ManyToOne(targetEntity="Tournament", inversedBy="matchs")
+     */
+    protected $tournament;
 
     /**
      * @return int
@@ -99,60 +105,68 @@ class Match {
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function formatScore(): string {
-        return $this->getScore()[0] . ":" . $this->getScore()[1];
+    public function getHostScore(): int {
+        return $this->host_score;
     }
 
     /**
-     * @return int[]
-     */
-    public function getScore(): array {
-        return $this->score;
-    }
-
-    /**
-     * @param int[] $score
+     * @param int $host_score
      * @return Match
      */
-    public function setScore(array $score): Match {
-        $this->score = $score;
+    public function setHostScore(int $host_score): Match {
+        $this->host_score = $host_score;
         return $this;
     }
 
     /**
-     * @return DateTime
+     * @return int
      */
-    public function getDatetime(): DateTime {
-        return $this->datetime;
+    public function getAwayScore(): int {
+        return $this->away_score;
     }
 
     /**
-     * @param DateTime $datetime
+     * @param int $away_score
      * @return Match
      */
-    public function setDatetime(DateTime $datetime): Match {
-        $this->datetime = $datetime;
+    public function setAwayScore(int $away_score): Match {
+        $this->away_score = $away_score;
         return $this;
     }
 
     /**
-     * @return bool
+     * @return \DateInterval
      */
-    public function isFinished(): bool {
-        return $this->finished;
+    public function getTime(): \DateInterval {
+        return $this->time;
     }
 
     /**
-     * @param bool $finished
+     * @param \DateInterval $time
      * @return Match
      */
-    public function setFinished(bool $finished): Match {
-        $this->finished = $finished;
+    public function setTime(\DateInterval $time): Match {
+        $this->time = $time;
         return $this;
     }
 
+    /**
+     * @return Tournament
+     */
+    public function getTournament(): Tournament {
+        return $this->tournament;
+    }
+
+    /**
+     * @param Tournament $tournament
+     * @return Match
+     */
+    public function setTournament(Tournament $tournament): Match {
+        $this->tournament = $tournament;
+        return $this;
+    }
 
 
 }

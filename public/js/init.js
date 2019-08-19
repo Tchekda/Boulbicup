@@ -1,9 +1,10 @@
 (function($){
     $(function(){
 
+        $('.modal').modal();
+        $('.dropdown-trigger').dropdown();
         $('.sidenav').sidenav();
         $('.parallax').parallax();
-        $('.dropdown-trigger').dropdown();
         $('.carousel').carousel({
             fullWidth: true,
             indicators: true

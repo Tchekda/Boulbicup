@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}Accueil{% endblock %} - Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+<nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container">
+        <a id="logo-container" href="{{ path('admin_index') }}" class="brand-logo">Administration</a>
+        <ul class="right hide-on-med-and-down">
+            <li><a href="#">Gestion des tournois</a></li>
+            <li><a href="#">Gestion des comptes</a></li>
+            <li><a href="#">Retour public</a></li>
+        </ul>
+
+        <ul id="nav-mobile" class="sidenav">
+            <li><a href="#">Gestion des tournois</a></li>
+            <li><a href="#">Gestion des comptes</a></li>
+            <li><a href="{{ path('homepage') }}">Retour public</a></li>
+        </ul>
+        <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="fa fa-bars"></i></a>
+    </div>
+</nav>
+{% block body %}{% endblock %}
+<footer class="page-footer orange">
+    <div class="footer-copyright">
+        <div class="container">
+            Créé par <a href="https://twitter.com/DavidTchekachev" class="brown-text text-darken-3">David Tchekachev</a>
+            avec <a class="brown-text text-darken-3" href="http://materializecss.com">Materialize</a>
+        </div>
+    </div>
+</footer>
+<script src="https://code.jquery.com/jquery-latest.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="/js/init.js"></script>
+<script>
+    (function ($) {
+        {% for color, message in notifications %}
+        M.toast({html: '{{ message }}', classes: "{{ color }}"});
+        {% endfor %}
+    })(jQuery);
+</script>
+{% block javascripts %}{% endblock %}
+</body>
+</html>

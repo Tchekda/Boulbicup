@@ -1,3 +1,6 @@
 .idea/
 vendor/
-include/
+testdata.php
+/include/
+databasemodel.mwb
+databasemodel.mwb.bak

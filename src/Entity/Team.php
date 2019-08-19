@@ -1,5 +1,13 @@
 <?php
 
+namespace Entity;
+
+
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\ManyToOne;
 
 /**
  * @Entity @Table(name="team")
@@ -25,10 +33,16 @@ class Team {
     protected $points;
 
     /**
-     * @ManyToOne(targetEntity="Pool")
+     * @ORM\ManyToOne(targetEntity="Pool", inversedBy="teams")
      * @var Pool
      */
     protected $pool;
+
+    /**
+     * @var Tournament[]
+     * @ORM\ManyToOne(targetEntity="Tournament", inversedBy="teams")
+     */
+    protected $tournament;
     /**
      * @return mixed
      */
@@ -83,6 +97,22 @@ class Team {
      */
     public function setPool(Pool $pool): void {
         $this->pool = $pool;
+    }
+
+    /**
+     * @return Tournament[]
+     */
+    public function getTournament(): array {
+        return $this->tournament;
+    }
+
+    /**
+     * @param Tournament[] $tournament
+     * @return Team
+     */
+    public function setTournament(array $tournament): Team {
+        $this->tournament = $tournament;
+        return $this;
     }
 
 }

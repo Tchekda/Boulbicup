@@ -3,6 +3,16 @@ nav .brand-logo {
     color: #444;
 }
 
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
 p {
     line-height: 2rem;
 }
@@ -40,7 +50,7 @@ p {
 .icon-block {
     padding: 0 15px;
 }
-.icon-block .material-icons {
+.icon-block  {
     font-size: inherit;
 }
 
