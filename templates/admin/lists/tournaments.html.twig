@@ -1,0 +1,35 @@
+{% extends 'admin/base_admin.html.twig' %}
+{% block title %}Tournois{% endblock %}
+{% block body %}
+    <div class="center">
+        <a class="btn green" href="{{ path('admin_tournament_new') }}">Créer un tournoi</a>
+    </div>
+    <table class="striped highlight centered responsive-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Dates</th>
+            <th>Nom</th>
+            <th>Catégorie</th>
+            <th>Editer</th>
+            <th>Supprimer</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for tournament in tournaments %}
+            <tr>
+                <td>{{ tournament.id }}</td>
+                <td>
+                    {{ tournament.startdatetime|localizeddate('none', 'none', 'fr', null, 'EEEE d MMMM Y')|capitalize }},
+                    {{ tournament.enddatetime|localizeddate('none', 'none', 'fr', null, 'EEEE d MMMM Y')|capitalize }}
+                </td>
+                <td>{{ tournament.name }}</td>
+                <td>U{{ tournament.category }}</td>
+                <td><a href="#"><i class="fa fa-edit green-text"></i></a></td>
+                <td><a href="#"><i class="fa fa-ban red-text"></i></a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+{% endblock %}

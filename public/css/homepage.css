@@ -84,3 +84,7 @@ footer.page-footer {
 .carousel {
     height: 500px!important;
 }
+
+.bold {
+    font-weight: bold;
+}

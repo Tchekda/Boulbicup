@@ -6,10 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 
 
 /**
- * @Entity @Table(name="tournament")
+ * @Entity(repositoryClass="Repository\TournamentRepository")
+ * @Table(name="tournament")
  **/
 class Tournament {
 
@@ -21,10 +23,16 @@ class Tournament {
 
 
     /**
-     * @var \DateInterval
-     * @Column(type="dateinterval")
+     * @var \DateTime
+     * @Column(type="datetime")
      */
-    protected $date;
+    protected $start_datetime;
+
+    /**
+     * @var \DateTime
+     * @Column(type="datetime")
+     */
+    protected $end_datetime;
 
     /**
      * @var string
@@ -40,19 +48,19 @@ class Tournament {
 
     /**
      * @var Match[]
-     * @ORM\OneToMany(targetEntity="Match", mappedBy="tournament")
+     * @ORM\OneToMany(targetEntity="Match", mappedBy="tournament", cascade={"remove"})
      */
     protected $matchs;
 
     /**
      * @var Team[]
-     * @ORM\OneToMany(targetEntity="Team", mappedBy="tournament")
+     * @ORM\OneToMany(targetEntity="Team", mappedBy="tournament", cascade={"remove"})
      */
     protected $teams;
 
     /**
      * @var Pool[]
-     * @ORM\OneToMany(targetEntity="Pool", mappedBy="tournament")
+     * @ORM\OneToMany(targetEntity="Pool", mappedBy="tournament", cascade={"remove"})
      */
     protected $pools;
 
@@ -75,20 +83,37 @@ class Tournament {
     }
 
     /**
-     * @return \DateInterval
+     * @return \DateTime
      */
-    public function getDate(): \DateInterval {
-        return $this->date;
+    public function getStartDatetime(): \DateTime {
+        return $this->start_datetime;
     }
 
     /**
-     * @param \DateInterval $date
+     * @param \DateTime $start_datetime
      * @return Tournament
      */
-    public function setDate(\DateInterval $date): Tournament {
-        $this->date = $date;
+    public function setStartDatetime(\DateTime $start_datetime): Tournament {
+        $this->start_datetime = $start_datetime;
         return $this;
     }
+
+    /**
+     * @return \DateTime
+     */
+    public function getEndDatetime(): \DateTime {
+        return $this->end_datetime;
+    }
+
+    /**
+     * @param \DateTime $end_datetime
+     * @return Tournament
+     */
+    public function setEndDatetime(\DateTime $end_datetime): Tournament {
+        $this->end_datetime = $end_datetime;
+        return $this;
+    }
+
 
     /**
      * @return string

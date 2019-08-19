@@ -51,6 +51,12 @@ class Match {
     protected $time;
 
     /**
+     * @var string
+     * @Column(type="string", nullable=true)
+     */
+    protected $type = null;
+
+    /**
      * @var Tournament
      * @ORM\ManyToOne(targetEntity="Tournament", inversedBy="matchs")
      */
@@ -151,6 +157,24 @@ class Match {
         $this->time = $time;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getType(): string {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return Match
+     */
+    public function setType(string $type): Match {
+        $this->type = $type;
+        return $this;
+    }
+
+
 
     /**
      * @return Tournament

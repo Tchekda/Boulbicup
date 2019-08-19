@@ -9,7 +9,7 @@
             </li>
             <li><a class="white-text" href="#">PHOTOS</a></li>
             <li><a class="white-text" href="#">NOUS CONTACTER</a></li>
-            <li><a class="white-text" href="{{ path('admin_login') }}">Admin</a></li>
+            <li><a class="white-text" href="{{ path('admin_login') }}">ADMIN</a></li>
         </ul>
 
         <ul id="nav-mobile" class="sidenav">
@@ -27,7 +27,7 @@
 </nav>
 <ul id='tournaments-dropdown' class='dropdown-content green'>
     {% for tournament in tournaments %}
-        <li><a href="#">{{ tournament.name }}</a></li>
+        <li><a href="#">{{ tournament.name }} U{{ tournament.category }} ({{ tournament.startdatetime|date('Y') }})</a></li>
     {% else %}
         <li><a href="#">Aucun tournoi</a></li>
     {% endfor %}

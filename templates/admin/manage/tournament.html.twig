@@ -1,0 +1,47 @@
+{% extends 'admin/base_admin.html.twig' %}
+{% block title %}Tournoi{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <form action="{{ path('admin_tournament_new_form') }}" method="POST" class="col s12">
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input placeholder="Nom du Tournoi/Trophée" id="name" name="name" type="text" class="validate">
+                        <label for="name">Nom du Tournoi/Trophée</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input placeholder="Catégorie" id="category" name="category" type="number" class="validate">
+                        <label for="category">Catégorie</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input type="text" id="start_date" name="start_date" class="datepicker">
+                        <label for="start_date">1er Jour</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input type="text" id="start_time" name="start_time" class="timepicker">
+                        <label for="start_time">Heure de début des matchs 1er Jour</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input type="text" id="end_date" name="end_date" class="datepicker">
+                        <label for="end_date">2nd Jour</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input type="text" id="end_time" name="end_time" class="timepicker">
+                        <label for="end_time">Heure de début des matchs 2nd Jour </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s6 center push-s3">
+                        <button class="btn waves-effect waves-light green" type="submit" name="action">
+                            {{ (tournament is defined ? 'Mettre à jour' : 'Créer <i class="fa fa-plus"></i>') }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -60,16 +60,18 @@
                         {{ ((future_tournaments is defined ? future_tournaments.0.date.0.year : "now")|date('Y') - "01-05-2016"|date('Y')) }}
                         ème édition de
                         ses tournois qui se dérouleront respectivement les {# TODO link to tournaments list#}
-                        {% for tournament in future_tournaments%}
-                            {% for day in tournament.date %}
-                                {{ day.day }} {{ day.month }} {{ (loop.last == false and tournament.date|length > 1 ? 'et') }}
-                            {% endfor %}
-                            ({{ tournament.category }}){{ (loop.last == false and future_tournaments|length > 1 ?',') }}
+                        {% for tournament in future_tournaments %}
+                            <span class="bold">
+                                {{ tournament.startdatetime|localizeddate('none', 'none', 'fr', null, 'd MMMM')|title }} -
+                                {{ tournament.enddatetime|localizeddate('none', 'none', 'fr', null, 'd MMMM')|title }}
+                                (U{{ tournament.category }})
+                            </span>
+                            {{ (loop.last == false and future_tournaments|length > 1 ?',') }}
                         {% else %}
-                            XXX
+                            (Aucun de prévu pour le moment)
                         {% endfor %}
                         à la patinoire de Boulogne Billancourt.
-                        avec le concours du meilleur dessin en u7, les photos des tournois, le jeu du palet et bien
+                        avec le concours du meilleur dessin en U7, les photos des tournois, le jeu du palet et bien
                         d'autres surprises !</p>
                 </div>
 
@@ -81,6 +83,7 @@
             <!-- Carousel Section -->
             <div class="carousel carousel-slider">
                 {% for image in carousel_images %}
+                    <img src="{{ image }}" alt="Carousel Image" class="carousel-item materialboxed responsive-img">
                 {% else %}
                     <img class="carousel-item materialboxed reponsive-img" src="images/logo.jpg" alt="Carousel image">
                     <img class="carousel-item materialboxed reponsive-img" src="images/boulbicup_logo.png"
