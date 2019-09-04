@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\ManyToOne;
 
 /**
+ * @Entity(repositoryClass="Repository\TeamRepository")
  * @Entity @Table(name="team")
  **/
 class Team {

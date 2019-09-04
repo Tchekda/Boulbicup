@@ -1,0 +1,28 @@
+<div class="center">
+    <a class="btn green" href="{{ path('admin_team_new', {'id': tournament.id}) }}">Rajouter une/des équipe(s)</a>
+</div>
+<table class="striped highlight centered responsive-table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Points</th>
+        <th>Pool</th>
+        <th>Editer</th>
+        <th>Supprimer</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for team in tournament.teams %}
+        <tr>
+            <td>{{ team.id }}</td>
+            <td>{{ team.name }}</td>
+            <td>{{ team.points }}</td>
+            <td>{{ team.pool }}</td>
+            <td><a href="{{ path('admin_tournament_edit', {'id': tournament.id}) }}"><i class="fa fa-edit green-text"></i></a></td>
+            <td><a href="#"><i class="fa fa-ban red-text"></i></a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+
+</table>

@@ -69,7 +69,7 @@ class Tournament {
     /**
      * @return int
      */
-    public function getId(): int {
+    public function getId() {
         return $this->id;
     }
 
@@ -166,7 +166,7 @@ class Tournament {
     /**
      * @return Team[]
      */
-    public function getTeams(): array {
+    public function getTeams() {
         return $this->teams;
     }
 
@@ -176,6 +176,11 @@ class Tournament {
      */
     public function setTeams(array $teams): Tournament {
         $this->teams = $teams;
+        return $this;
+    }
+
+    public function addTeam(Team $team): Tournament {
+        $this->teams[] = $team;
         return $this;
     }
 

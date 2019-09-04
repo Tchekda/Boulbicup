@@ -1,0 +1,28 @@
+{% extends 'admin/base_admin.html.twig' %}
+{% block title %}Utilisateurs{% endblock %}
+{% block body %}
+    <div class="center">
+        <a class="btn green" href="{{ path('admin_tournament_new') }}">Ajouter un utilisateur</a>
+    </div>
+    <table class="striped highlight centered responsive-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom d'Utilisateur</th>
+            <th>Editer</th>
+            <th>Supprimer</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td><a href="#"><i class="fa fa-edit green-text"></i></a></td>
+                <td><a href="#"><i class="fa fa-ban red-text"></i></a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+
+    </table>
+{% endblock %}

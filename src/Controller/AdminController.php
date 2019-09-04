@@ -5,6 +5,7 @@ namespace Controller;
 
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Entity\Pool;
 use Entity\Tournament;
 use Entity\User;
 use Service\App;
@@ -87,7 +88,7 @@ class AdminController extends BaseController {
             exit();
         }
         /** @var Tournament[] $tournaments */
-        $tournaments = $this->entityManager->getRepository("Entity\\Tournament")->findAll(true);
+        $tournaments = $this->entityManager->getRepository("Entity\\Tournament")->findAll();
         echo $this->twig->render('admin/lists/tournaments.html.twig', ['tournaments' => $tournaments]);
     }
 
@@ -96,7 +97,7 @@ class AdminController extends BaseController {
             header('Location: ' . $this->router->generate('admin_login'));
             exit();
         }
-        echo $this->twig->render('admin/manage/tournament.html.twig');
+        echo $this->twig->render('admin/manage/tournament/tournament_new.html.twig');
     }
 
     public function tournamentNewForm(){
@@ -108,24 +109,76 @@ class AdminController extends BaseController {
             exit();
         }
 
-        $tournament = new Tournament();
+        if ($id = intval($_POST['tournament_id'])){
+            if (!$tournament = $this->entityManager->getRepository('Entity\\Tournament')->find($id)){
+                $tournament = new Tournament();
+            }
+        }else {
+            $tournament = new Tournament();
+        }
+
         $tournament->setName($_POST['name']);
         $tournament->setCategory(intval($_POST['category']));
-        $start_datetime = new DateTime($_POST['start_date'] . $_POST['start_time']);
-        $end_datetime = new DateTime($_POST['end_date'] . $_POST['end_time']);
+
+        $start_datetime = DateTime::createFromFormat('d/m/Y H:i', $_POST['start_date'] . ' ' . $_POST['start_time']);
+        $end_datetime = DateTime::createFromFormat('d/m/Y H:i', $_POST['end_date'] . ' ' . $_POST['end_time']);
         if ($start_datetime < $end_datetime){
             $tournament->setStartDatetime($start_datetime);
             $tournament->setEndDatetime($end_datetime);
+            if ($tournament->getId()){
+                $this->entityManager->flush();
+                header('Location: ' . $this->router->generate('admin_tournament_edit', ['id' => $tournament->getId()]));
+            }else {
+                $this->entityManager->persist($tournament);
+                $this->entityManager->flush();
 
-            $this->entityManager->persist($tournament);
-            $this->entityManager->flush();
-
-            header('Location : ' . $this->router->generate('admin_tournament_list'));
-            exit();
+                header('Location: ' . $this->router->generate('admin_tournament_list'));
+                exit();
+            }
         }else {
-            $notifications['red'] = 'Le second jour doit être après le 1er';
-            echo $this->twig->render('admin/manage/tournament.html.twig', ['notifications' => $notifications, 'tournament' => $tournament]);
+            if ($tournament->getId()){
+                header('Location: ' . $this->router->generate('admin_tournament_edit', ['id' => $tournament->getId()]));
+            }else {
+                header('Location: ' . $this->router->generate('admin_tournament_new'));
+            }
         }
 
+    }
+
+    public function tournamentEdit($id) {
+        if (!App::is_loggedin($this->entityManager)) {
+            header('Location: ' . $this->router->generate('admin_login'));
+            exit();
+        }
+        /** @var Tournament $tournament */
+        if (!$tournament = $this->entityManager->getRepository('Entity\\Tournament')->find($id)){
+            header('Location: ' . $this->router->generate('admin_index'));
+        }
+
+        echo $this->twig->render('admin/manage/tournament/tournament_edit.html.twig', ['tournament' => $tournament]);
+    }
+
+    public function teamNew($id) {
+        if (!App::is_loggedin($this->entityManager)) {
+            header('Location: ' . $this->router->generate('admin_login'));
+            exit();
+        }
+        /** @var Tournament $tournament */
+        if (!$tournament = $this->entityManager->getRepository('Entity\\Tournament')->find($id)){
+            header('Location: ' . $this->router->generate('admin_index'));
+        }
+
+        echo $this->twig->render('admin/manage/team/team_new.html.twig');
+
+    }
+
+    public function userList(){
+        if (!App::is_loggedin($this->entityManager)) {
+            header('Location: ' . $this->router->generate('admin_login'));
+            exit();
+        }
+        /** @var User[] $users */
+        $users = $this->entityManager->getRepository("Entity\\User")->findAll();
+        echo $this->twig->render('admin/lists/users.html.twig', ['users' => $users]);
     }
 }

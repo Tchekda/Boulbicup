@@ -33,6 +33,9 @@ try {
         array('GET', '/admin/tournaments', array(AdminController::class, 'tournamentList'), 'admin_tournament_list'),
         array('GET', '/admin/tournament/new', array(AdminController::class, 'tournamentNew'), 'admin_tournament_new'),
         array('POST', '/admin/tournament/new', array(AdminController::class, 'tournamentNewForm'), 'admin_tournament_new_form'),
+        array('GET', '/admin/tournament/edit/[i:id]', array(AdminController::class, 'tournamentEdit'), 'admin_tournament_edit'),
+        array('GET', '/admin/teams/new/[i:id]', array(AdminController::class, 'teamNew'), 'admin_team_new'),
+        array('GET', '/admin/users', array(AdminController::class, 'userList'), 'admin_user_list'),
     ));
 } catch (Exception $e) {
     die("Can't register routes : " . $e->getMessage());

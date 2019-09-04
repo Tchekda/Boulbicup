@@ -25,7 +25,7 @@
                 </td>
                 <td>{{ tournament.name }}</td>
                 <td>U{{ tournament.category }}</td>
-                <td><a href="#"><i class="fa fa-edit green-text"></i></a></td>
+                <td><a href="{{ path('admin_tournament_edit', {'id': tournament.id}) }}"><i class="fa fa-edit green-text"></i></a></td>
                 <td><a href="#"><i class="fa fa-ban red-text"></i></a></td>
             </tr>
         {% endfor %}

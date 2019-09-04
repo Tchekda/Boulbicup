@@ -13,12 +13,18 @@
 
         M.updateTextFields();
         $('.datepicker').datepicker({
-            firstDay: 1
+            firstDay: 1,
+            format: 'dd/mm/yyyy'
         });
-        $('.timepicker').timepicker();
+        $('.timepicker').timepicker({
+            twelveHour: false
+        });
 
         setInterval(function () {
             $('.carousel').carousel('next')
-        }, 2000)
+        }, 2000);
+
+        $('.tabs').tabs();
+
     }); // end of document ready
 })(jQuery); // end of jQuery name space

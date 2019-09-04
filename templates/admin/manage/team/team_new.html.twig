@@ -1,0 +1,86 @@
+{% extends 'admin/base_admin.html.twig' %}
+{% block title %}Equipe{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <form action="{{ path('admin_tournament_new_form') }}" method="POST" class="col s12">
+                <div class="row" id="pools">
+                    <div class="col pool card s12" id="pool_1">
+                        <div class="card-content">
+                            <div class="card-title input-field">
+                                <input placeholder="Nom de la Pool" id="pool_1_name" name="pool_1_name" type="text"
+                                       value="Pool 1" class="validate">
+                                <label for="pool_1_name">Nom de la Pool</label>
+
+                            </div>
+                            <div class="input-field col s12">
+                                <input placeholder="Nom de l'équipe" id="pool_1_name_1" name="pool_1_name_1" type="text"
+                                       class="validate">
+                                <label for="pool_1_name_1">Nom de l'équipe</label>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <a href="#" class="disabled green-text">4 Pools Max</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s2 center push-s5">
+                        <button class="btn waves-effect waves-light green" id="addPool">
+                            <i class="fa fa-plus"></i> Pool
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col s6 center push-s3">
+                        <button class="btn waves-effect waves-light green" type="submit" name="action">
+                            Valider
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        $(function () {
+            $("#addPool").click(function (e) {
+                e.preventDefault();
+                let nbPools = $('#pools div.pool').size(),
+                    poolDiv = $('#pools');
+                if (nbPools >= 4){
+                    M.toast({html: '4 Pools Maximum', classes: 'red'})
+                }else {
+                    let poolHTML = "<div class=\"col pool card s" + (12 / (nbPools + 1)) + "\" id=\"pool_" + (nbPools + 1) + "\">\n" +
+                        "                        <div class=\"card-content\">\n" +
+                        "                            <div class=\"card-title input-field\">\n" +
+                        "                                <input placeholder=\"Nom de la Pool\" id=\"pool_" + (nbPools + 1) + "_name\" name=\"pool_" + (nbPools + 1) + "_name\" type=\"text\"\n" +
+                        "                                       value=\"Pool " + (nbPools + 1) + "\" class=\"validate\">\n" +
+                        "                                <label for=\"pool_" + (nbPools + 1) + "_name\">Nom de l'équipe</label>\n" +
+                        "                            </div>\n" +
+                        "                            <div class=\"input-field col s12\">\n" +
+                        "                                 <input placeholder=\"Nom de l'équipe\" id=\"pool_" + (nbPools + 1) + "_name_1\"" +
+                        "                                     name=\"pool_" + (nbPools + 1) + "_name_1\" type=\"text\"\n" +
+                        "                                       class=\"validate\">\n" +
+                        "                                 <label for=\"pool_" + (nbPools + 1) + "_name_1\">Nom de l'équipe</label>\n" +
+                        "                            </div>\n" +
+                        "                        </div>\n" +
+                        "                        <div class=\"card-action\">\n" +
+                        "                           <a href=\"#\" class=\"red-text\" id=\"pool_" + (nbPools + 1) + "_delete\">Suppimer</a>\n" +
+                        "                        </div>\n" +
+                        "                    </div>";
+
+                    $('.pool').each(function (i) {
+                        $(this).removeClass('s' + (12 / nbPools));
+                        $(this).addClass('s' + (12 / (nbPools + 1)));
+                    });
+
+                    poolDiv.append(poolHTML);
+                    M.updateTextFields();
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -17,14 +17,14 @@
         <a id="logo-container" href="{{ path('admin_index') }}" class="brand-logo">Administration</a>
         <ul class="right hide-on-med-and-down">
             <li><a href="{{ path('admin_tournament_list') }}">Gestion des tournois</a></li>
-            <li><a href="#">Gestion des comptes</a></li>
+            <li><a href="{{ path('admin_user_list') }}">Gestion des comptes</a></li>
             <li><a href="{{ path('homepage') }}">Retour public</a></li>
             <li><a href="{{ path('admin_logout') }}">Déconnexion</a></li>
         </ul>
 
         <ul id="nav-mobile" class="sidenav">
             <li><a href="{{ path('admin_tournament_list') }}">Gestion des tournois</a></li>
-            <li><a href="#">Gestion des comptes</a></li>
+            <li><a href="{{ path('admin_user_list') }}">Gestion des comptes</a></li>
             <li><a href="{{ path('homepage') }}">Retour public</a></li>
             <li><a href="{{ path('admin_logout') }}">Déconnexion</a></li>
         </ul>
