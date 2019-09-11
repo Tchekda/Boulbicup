@@ -6,9 +6,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 
 /**
- * @Entity @Table(name="pool")
+ * @Entity(repositoryClass="Repository\PoolRepository")
+ * @Table(name="pool")
  **/
 class Pool {
 
@@ -33,6 +35,7 @@ class Pool {
     /**
      * @var Tournament
      * @ORM\ManyToOne(targetEntity="Tournament", inversedBy="pools")
+     * @ORM\JoinColumn(name="tournament", referencedColumnName="id")
      */
     protected $tournament;
 

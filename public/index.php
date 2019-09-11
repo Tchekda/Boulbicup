@@ -35,6 +35,7 @@ try {
         array('POST', '/admin/tournament/new', array(AdminController::class, 'tournamentNewForm'), 'admin_tournament_new_form'),
         array('GET', '/admin/tournament/edit/[i:id]', array(AdminController::class, 'tournamentEdit'), 'admin_tournament_edit'),
         array('GET', '/admin/teams/new/[i:id]', array(AdminController::class, 'teamNew'), 'admin_team_new'),
+        array('POST', '/admin/teams/new/[i:id]', array(AdminController::class, 'teamNewForm'), 'admin_team_new_form'),
         array('GET', '/admin/users', array(AdminController::class, 'userList'), 'admin_user_list'),
     ));
 } catch (Exception $e) {

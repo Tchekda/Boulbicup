@@ -168,7 +168,49 @@ class AdminController extends BaseController {
             header('Location: ' . $this->router->generate('admin_index'));
         }
 
-        echo $this->twig->render('admin/manage/team/team_new.html.twig');
+
+        echo $this->twig->render('admin/manage/team/team_new.html.twig', ['tournament' => $tournament]);
+
+    }
+
+    public function teamNewForm($id){
+        if (!App::is_loggedin($this->entityManager)) {
+            header('Location: ' . $this->router->generate('admin_login'));
+            exit();
+        }
+        /** @var Tournament $tournament */
+        if (!$tournament = $this->entityManager->getRepository('Entity\\Tournament')->find($id)){
+            header('Location: ' . $this->router->generate('admin_index'));
+        }
+
+        unset($_POST['action']);
+        $pools = array();
+        foreach ($_POST as $key => $value) {
+            preg_match('/^pool_(\d)_name$/', $key, $poolMatches);
+            if (count($poolMatches) > 0){
+                $poolID = intval($poolMatches[1]);
+                $pools[$poolID] = [
+                    'name' => $value,
+                    'teams' => array()
+                ];
+            }else{
+                preg_match('/^pool_(\d)_name_(\d)$/', $key, $teamMatches);
+                if (count($teamMatches) > 1){
+                    $pools[intval($teamMatches[1])]['teams'][] = $value;
+                }
+            }
+        }
+
+        dd($this->entityManager->getRepository('Entity\\Pool')->findByTournament($tournament));
+
+        foreach ($pools as $poolName => $poolTeams){
+            if (!$this->entityManager->getRepository('Entity\\Pool')->findBy(['tournament' => $tournament, 'name'=> $poolName])){
+                die("Not Found");
+            }else {
+                die("Found");
+            }
+
+        }
 
     }
 

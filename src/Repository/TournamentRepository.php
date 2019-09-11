@@ -18,7 +18,7 @@ class TournamentRepository extends EntityRepository {
 
     public function findAll(bool $reverse = false) {
         return $this->createQueryBuilder('t')
-            ->orderBy('t.start_datetime', ($reverse ? 'DESC' : 'ASC'))
+            ->orderBy('t.start_datetime', ($reverse ? 'ASC' : 'DESC'))
             ->getQuery()
             ->getResult();
     }
