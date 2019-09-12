@@ -22,7 +22,7 @@ class Team {
     protected $id;
 
     /**
-     * @Column(type="string", unique=true)
+     * @Column(type="string")
      * @var string
      **/
     protected $name;
@@ -31,7 +31,7 @@ class Team {
      * @Column(type="integer")
      * @var int
      **/
-    protected $points;
+    protected $points = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="Pool", inversedBy="teams")
@@ -40,8 +40,9 @@ class Team {
     protected $pool;
 
     /**
-     * @var Tournament[]
+     * @var Tournament
      * @ORM\ManyToOne(targetEntity="Tournament", inversedBy="teams")
+     * @ORM\JoinColumn(name="tournament_id", referencedColumnName="id")
      */
     protected $tournament;
     /**
@@ -101,17 +102,17 @@ class Team {
     }
 
     /**
-     * @return Tournament[]
+     * @return Tournament
      */
-    public function getTournament(): array {
+    public function getTournament(): Tournament {
         return $this->tournament;
     }
 
     /**
-     * @param Tournament[] $tournament
+     * @param Tournament $tournament
      * @return Team
      */
-    public function setTournament(array $tournament): Team {
+    public function setTournament(Tournament $tournament): Team {
         $this->tournament = $tournament;
         return $this;
     }

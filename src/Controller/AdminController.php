@@ -6,6 +6,7 @@ namespace Controller;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Entity\Pool;
+use Entity\Team;
 use Entity\Tournament;
 use Entity\User;
 use Service\App;
@@ -201,16 +202,38 @@ class AdminController extends BaseController {
             }
         }
 
-        dd($this->entityManager->getRepository('Entity\\Pool')->findByTournament($tournament));
+
+        dd($tournament);
 
         foreach ($pools as $poolName => $poolTeams){
-            if (!$this->entityManager->getRepository('Entity\\Pool')->findBy(['tournament' => $tournament, 'name'=> $poolName])){
-                die("Not Found");
-            }else {
-                die("Found");
+            /** @var $pool Pool */
+            if (null == $pool = $tournament->getPool($poolName)){
+                $pool = new Pool();
+                $pool->setName($poolName);
+                $pool->setTournament($tournament);
+
+                $tournament->addPool($pool);
+
+                $this->entityManager->persist($pool);
             }
 
+            foreach ($poolTeams as $poolTeam){
+                if (null == $team = $pool->getTeam($poolTeam)){
+                    $team = new Team();
+                    $team->setName($poolTeam);
+                    $team->setPool($pool);
+                    $team->setTournament($tournament);
+
+                    $this->entityManager->persist($team);
+
+                    $pool->addTeam($team);
+                    $tournament->addTeam($team);
+                }
+            }
+            $this->entityManager->flush();
         }
+
+        dd($tournament);
 
     }
 

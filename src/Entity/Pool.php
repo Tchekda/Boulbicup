@@ -2,6 +2,7 @@
 
 namespace Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -39,8 +40,8 @@ class Pool {
      */
     protected $tournament;
 
-    public function __construct(string $name) {
-        $this->name = $name;
+    public function __construct() {
+        $this->teams = new ArrayCollection();
     }
 
     /**
@@ -79,11 +80,32 @@ class Pool {
     }
 
     /**
+     * @param string $name
+     * @return Team|null
+     */
+    public function getTeam($name){
+        if ($this->teams == null){
+            return null;
+        }
+        foreach ($this->teams as $team){
+            if ($team->getName() == $name){
+                return $team;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @param Team[] $teams
      * @return Pool
      */
     public function setTeams(array $teams): Pool {
         $this->teams = $teams;
+        return $this;
+    }
+
+    public function addTeam(Team $team): Pool{
+        $this->teams[] = $team;
         return $this;
     }
 

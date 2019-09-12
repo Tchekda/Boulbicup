@@ -2,6 +2,7 @@
 
 namespace Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -65,6 +66,12 @@ class Tournament {
     protected $pools;
 
     // TODO Delay time
+
+    public function __construct() {
+        $this->matchs = new ArrayCollection();
+        $this->teams = new ArrayCollection();
+        $this->pools = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -184,11 +191,32 @@ class Tournament {
         return $this;
     }
 
+
+
     /**
      * @return Pool[]
      */
-    public function getPools(): array {
+    public function getPools() {
+        if (!$this->pools){
+            $this->pools = new ArrayCollection();
+        }
         return $this->pools;
+    }
+
+    /**
+     * @param string $name
+     * @return Pool|null
+     */
+    public function getPool(string $name) {
+        if (!$this->pools){
+            $this->pools = new ArrayCollection();
+        }
+        foreach ($this->pools as $pool){
+            if ($pool->getName() == $name){
+                return $pool;
+            }
+        }
+        return null;
     }
 
     /**
@@ -197,6 +225,11 @@ class Tournament {
      */
     public function setPools(array $pools): Tournament {
         $this->pools = $pools;
+        return $this;
+    }
+
+    public function addPool(Pool $pool): Tournament{
+        $this->pools[] = $pool;
         return $this;
     }
 
