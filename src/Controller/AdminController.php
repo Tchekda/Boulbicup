@@ -155,7 +155,7 @@ class AdminController extends BaseController {
         if (!$tournament = $this->entityManager->getRepository('Entity\\Tournament')->find($id)){
             header('Location: ' . $this->router->generate('admin_index'));
         }
-
+        
         echo $this->twig->render('admin/manage/tournament/tournament_edit.html.twig', ['tournament' => $tournament]);
     }
 
@@ -203,9 +203,10 @@ class AdminController extends BaseController {
         }
 
 
-        dd($tournament);
 
-        foreach ($pools as $poolName => $poolTeams){
+        foreach ($pools as $poolArray){
+            $poolName = $poolArray['name'];
+            $poolTeams = $poolArray['teams'];
             /** @var $pool Pool */
             if (null == $pool = $tournament->getPool($poolName)){
                 $pool = new Pool();
@@ -214,7 +215,6 @@ class AdminController extends BaseController {
 
                 $tournament->addPool($pool);
 
-                $this->entityManager->persist($pool);
             }
 
             foreach ($poolTeams as $poolTeam){
@@ -228,12 +228,17 @@ class AdminController extends BaseController {
 
                     $pool->addTeam($team);
                     $tournament->addTeam($team);
+
                 }
             }
+            $this->entityManager->persist($pool);
+
+            $this->entityManager->persist($tournament);
             $this->entityManager->flush();
         }
 
-        dd($tournament);
+        header('Location: ' . $this->router->generate('admin_tournament_edit', ['id' => $tournament->getId()]));
+        exit();
 
     }
 

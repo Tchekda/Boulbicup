@@ -23,7 +23,7 @@ class Pool {
 
     /**
      * @var string
-     * @Column(type="string", unique=true)
+     * @Column(type="string")
      */
     protected $name;
 
