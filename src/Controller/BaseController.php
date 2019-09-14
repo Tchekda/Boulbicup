@@ -11,6 +11,9 @@ use Twig\TwigFunction;
 
 class BaseController {
 
+    /**
+     * @var Environment
+     */
     public $twig;
     /**
      * @var \AltoRouter
@@ -27,7 +30,7 @@ class BaseController {
     private $entityManager;
 
     /**
-     * BaseController constructor.
+     * BaseController constructor that configs Twig and generates and required template variables.
      * @param $router \AltoRouter
      */
     public function __construct($router, EntityManagerInterface $entityManager) {
@@ -41,7 +44,6 @@ class BaseController {
         $this->twig->addFunction($path_function);
 
         $this->twig->addExtension(new \Twig_Extensions_Extension_Intl());
-
 
         $this->entityManager = $entityManager;
 

@@ -26,13 +26,13 @@ try {
         array('GET', '/', array(HomeController::class, 'homepage'), 'homepage'),
         array('GET', '/contact', array(HomeController::class, 'contact'), 'contact'), // TODO Contact Page
         array('GET', '/tournament/[i:id]', array(HomeController::class, 'homepage'), 'tournament'), // TODO Tournament Page
+        array('GET', '/login', array(HomeController::class, 'login'), 'admin_login'),
+        array('POST', '/login', array(HomeController::class, 'loginForm'), 'admin_login_form'),
         array('GET', '/admin/', array(AdminController::class, 'index'), 'admin_index'),
-        array('GET', '/admin/login', array(AdminController::class, 'login'), 'admin_login'),
-        array('POST', '/admin/login', array(AdminController::class, 'loginForm'), 'admin_login_form'),
         array('GET', '/admin/logout', array(AdminController::class, 'logout'), 'admin_logout'),
         array('GET', '/admin/tournaments', array(AdminController::class, 'tournamentList'), 'admin_tournament_list'),
         array('GET', '/admin/tournament/new', array(AdminController::class, 'tournamentNew'), 'admin_tournament_new'),
-        array('POST', '/admin/tournament/new', array(AdminController::class, 'tournamentNewForm'), 'admin_tournament_new_form'),
+        array('POST', '/admin/tournament/submit', array(AdminController::class, 'tournamentSubmitForm'), 'admin_tournament_new_form'),
         array('GET', '/admin/tournament/edit/[i:id]', array(AdminController::class, 'tournamentEdit'), 'admin_tournament_edit'),
         array('GET', '/admin/teams/new/[i:id]', array(AdminController::class, 'teamNew'), 'admin_team_new'),
         array('POST', '/admin/teams/new/[i:id]', array(AdminController::class, 'teamNewForm'), 'admin_team_new_form'),
