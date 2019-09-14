@@ -36,7 +36,7 @@ class Pool {
     /**
      * @var Tournament
      * @ORM\ManyToOne(targetEntity="Tournament", inversedBy="pools")
-     * @ORM\JoinColumn(name="tournament", referencedColumnName="id")
+     * @ORM\JoinColumn(name="tournament_pools", referencedColumnName="id")
      */
     protected $tournament;
 

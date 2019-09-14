@@ -144,6 +144,8 @@ class AdminController extends BaseController {
     public function tournamentEdit(string $id) {
         $tournament = $this->findTournamentByID($id); // Try to find the tournament by the given id, If not found : redirected to tournaments list
 
+        dd($tournament);
+
         echo $this->twig->render('admin/manage/tournament/tournament_edit.html.twig', ['tournament' => $tournament]);
     }
 
