@@ -27,13 +27,25 @@ class Tournament {
      * @var \DateTime
      * @Column(type="datetime")
      */
-    protected $start_datetime;
+    protected $start_datetime_first_day;
 
     /**
      * @var \DateTime
      * @Column(type="datetime")
      */
-    protected $end_datetime;
+    protected $end_datetime_first_day;
+
+    /**
+     * @var \DateTime
+     * @Column(type="datetime", nullable=true)
+     */
+    protected $start_datetime_second_day;
+
+    /**
+     * @var \DateTime
+     * @Column(type="datetime", nullable=true)
+     */
+    protected $end_datetime_second_day;
 
     /**
      * @var string
@@ -49,19 +61,19 @@ class Tournament {
 
     /**
      * @var Match[]
-     * @ORM\OneToMany(targetEntity="Match", mappedBy="tournament", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Match", mappedBy="tournament", cascade={"persist", "remove"},)
      */
     protected $matchs;
 
     /**
      * @var Team[]
-     * @ORM\OneToMany(targetEntity="Team", mappedBy="tournament", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Team", mappedBy="tournament")
      */
     protected $teams;
 
     /**
      * @var Pool[]
-     * @ORM\OneToMany(targetEntity="Pool", mappedBy="tournament", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Pool", mappedBy="tournament")
      */
     protected $pools;
 
@@ -92,35 +104,66 @@ class Tournament {
     /**
      * @return \DateTime
      */
-    public function getStartDatetime(): \DateTime {
-        return $this->start_datetime;
+    public function getStartDatetimeFirstday(): \DateTime {
+        return $this->start_datetime_first_day;
     }
 
     /**
-     * @param \DateTime $start_datetime
+     * @param \DateTime $start_datetime_first_day
      * @return Tournament
      */
-    public function setStartDatetime(\DateTime $start_datetime): Tournament {
-        $this->start_datetime = $start_datetime;
+    public function setStartDatetimeFirstday(\DateTime $start_datetime_first_day): Tournament {
+        $this->start_datetime_first_day = $start_datetime_first_day;
         return $this;
     }
 
     /**
      * @return \DateTime
      */
-    public function getEndDatetime(): \DateTime {
-        return $this->end_datetime;
+    public function getEndDatetimeFirstday(): \DateTime {
+        return $this->end_datetime_first_day;
     }
 
     /**
-     * @param \DateTime $end_datetime
+     * @param \DateTime $end_datetime_first_day
      * @return Tournament
      */
-    public function setEndDatetime(\DateTime $end_datetime): Tournament {
-        $this->end_datetime = $end_datetime;
+    public function setEndDatetimeFirstday(\DateTime $end_datetime_first_day): Tournament {
+        $this->end_datetime_first_day = $end_datetime_first_day;
         return $this;
     }
 
+    /**
+     * @return \DateTime
+     */
+    public function getStartDatetimeSecondDay() {
+        return $this->start_datetime_second_day;
+    }
+
+    /**
+     * @param \DateTime $start_datetime_second_day
+     * @return Tournament
+     */
+    public function setStartDatetimeSecondDay(\DateTime $start_datetime_second_day): Tournament {
+        $this->start_datetime_second_day = $start_datetime_second_day;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getEndDatetimeSecondDay() {
+        return $this->end_datetime_second_day;
+    }
+
+    /**
+     * @param \DateTime $end_datetime_second_day
+     * @return Tournament
+     */
+    public function setEndDatetimeSecondDay(\DateTime $end_datetime_second_day): Tournament {
+        $this->end_datetime_second_day = $end_datetime_second_day;
+        return $this;
+    }
 
     /**
      * @return string

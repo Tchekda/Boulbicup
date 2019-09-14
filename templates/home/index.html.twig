@@ -62,8 +62,8 @@
                         ses tournois qui se dérouleront respectivement les {# TODO link to tournaments list#}
                         {% for tournament in future_tournaments %}
                             <span class="bold">
-                                {{ tournament.startdatetime|localizeddate('none', 'none', 'fr', null, 'd MMMM')|title }} -
-                                {{ tournament.enddatetime|localizeddate('none', 'none', 'fr', null, 'd MMMM')|title }}
+                                {{ tournament.startdatetimefirstday|localizeddate('none', 'none', 'fr', null, 'd MMMM')|title }} -
+                                {{ (tournament.enddatetimesecondday ? tournament.enddatetimesecondday : tournament.enddatetimefirstday)|localizeddate('none', 'none', 'fr', null, 'd MMMM')|title }}
                                 (U{{ tournament.category }})
                             </span>
                             {{ (loop.last == false and future_tournaments|length > 1 ?',') }}

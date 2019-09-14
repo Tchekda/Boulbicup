@@ -2,5 +2,4 @@
 vendor/
 testdata.php
 /include/
-databasemodel.mwb
-databasemodel.mwb.bak
+env.sh

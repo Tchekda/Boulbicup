@@ -1,39 +1,49 @@
 <form action="{{ path('admin_tournament_new_form') }}" method="POST" class="col s12">
     <div class="row">
-        <div class="input-field col s6">
-            <input placeholder="Nom du Tournoi/Trophée" id="name" value="{{ tournament.name }}"
+        <div class="input-field col m6 s12">
+            <input required placeholder="Nom du Tournoi/Trophée" id="name" value="{{ tournament.name }}"
                    name="name" type="text" class="validate">
             <label for="name">Nom du Tournoi/Trophée</label>
         </div>
-        <div class="input-field col s6">
-            <input placeholder="Catégorie" id="category" value="{{ tournament.category }}"
+        <div class="input-field col m6 s12">
+            <input required placeholder="Catégorie" id="category" value="{{ tournament.category }}"
                    name="category" type="number"
                    class="validate">
             <label for="category">Catégorie</label>
         </div>
     </div>
     <div class="row">
-        <div class="input-field col s6">
-            <input type="text" id="start_date" name="start_date"
-                   value="{{ tournament.startdatetime|date("d/m/Y") }}" class="datepicker">
-            <label for="start_date">1er Jour</label>
+        <div class="input-field col m4 s12">
+            <input required type="text" id="date_first" name="date_first"
+                   value="{{ tournament.startdatetimefirstday|date("d/m/Y") }}" class="datepicker">
+            <label for="date_first">1er Jour</label>
         </div>
-        <div class="input-field col s6">
-            <input type="text" id="start_time" name="start_time"
-                   value="{{ tournament.startdatetime|date("H:i") }}" class="timepicker">
-            <label for="start_time">Heure de début des matchs 1er Jour</label>
+        <div class="input-field col m4 s12">
+            <input required type="text" id="start_time_first" name="start_time_first"
+                   value="{{ tournament.startdatetimefirstday|date("H:i") }}" class="timepicker">
+            <label for="start_time_first">Heure de début des matchs 1er Jour</label>
+        </div>
+        <div class="input-field col m4 s12">
+            <input required type="text" id="end_time_first" name="end_time_first"
+                   value="{{ tournament.enddatetimefirstday|date("H:i") }}" class="timepicker">
+            <label for="end_time_first">Heure de fin des matchs 1er Jour</label>
         </div>
     </div>
     <div class="row">
-        <div class="input-field col s6">
-            <input type="text" id="end_date" name="end_date"
-                   value="{{ tournament.enddatetime|date("d/m/Y") }}" class="datepicker">
-            <label for="end_date">2nd Jour</label>
+        <div class="input-field col m4 s12">
+            <input type="text" id="date_second" name="date_second"
+                   value="{{ tournament.startdatetimesecondday|date("d/m/Y") }}" class="datepicker">
+            <label for="date_second">2nd Jour</label>
         </div>
-        <div class="input-field col s6">
-            <input type="text" id="end_time" name="end_time"
-                   value="{{ tournament.enddatetime|date("H:i") }}" class="timepicker">
-            <label for="end_time">Heure de début des matchs 2nd Jour </label>
+        <div class="input-field col m4 s12">
+            <input type="text" id="start_time_second" name="start_time_second"
+                   value="{{ tournament.startdatetimesecondday|date("H:i") }}" class="timepicker">
+            <label for="start_time_second">Heure de début des matchs 2nd Jour </label>
+        </div>
+        <div class="input-field col m4 s12">
+            <input type="text" id="end_time_second" name="end_time_second"
+                   value="{{ tournament.enddatetimesecondday|date("H:i") }}" class="timepicker">
+            <label for="end_time_second">Heure de fin des matchs 2nd Jour </label>
         </div>
     </div>
     <input type="hidden" name="tournament_id" value="{{ tournament.id }}">
