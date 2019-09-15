@@ -5,35 +5,102 @@
         <div class="row">
             <form action="{{ path('admin_team_new_form', {'id': tournament.id}) }}" method="POST" class="col s12">
                 <div class="row" id="pools">
-                    <div class="col pool card s12" id="pool_1">
-                        <div class="card-content">
-                            <div class="card-title">
-                                <div class="input-field">
-                                    <input required placeholder="Nom de la Pool" id="pool_1_name" name="pool_1_name" type="text"
-                                           value="Pool 1" class="validate">
-                                    <label for="pool_1_name">Nom de la Pool</label>
+                    {% for pool in tournament.pools %}
+                        <div class="col pool card s{{ (12 / tournament.pools|length) }}" id="pool_{{ pool.id }}">
+                            <div class="card-content">
+                                <div class="card-title">
+                                    <div class="input-field">
+                                        <input required placeholder="Nom de la Pool" id="pool_{{ pool.id }}_name"
+                                               name="pool_{{ pool.id }}_name" type="text"
+                                               value="{{ pool.name }}" class="validate">
+                                        <label for="pool_{{ pool.id }}_name">Nom de la Pool</label>
+                                    </div>
+                                </div>
+                                <div class="teams">
+                                    {% for team in pool.teams %}
+                                        <div id="pool_{{ pool.id }}_name_{{ team.id }} ">
+                                            {% if loop.index == 1 %}
+                                                <div class="input-field">
+                                                    <input required placeholder="Nom de l'équipe"
+                                                           id="pool_{{ pool.id }}_team_{{ team.id }}"
+                                                           name="pool_{{ pool.id }}_team_{{ team.id }}"
+                                                           type="text" class="validate" value="{{ team.name }}">
+                                                    <label for="pool_{{ pool.id }}_team_{{ team.id }}">Nom de
+                                                        l'équipe</label>
+                                                </div>
+                                            {% else %}
+                                                <div class="input-field inline">
+                                                    <input required placeholder="Nom de l'équipe"
+                                                           id="pool_{{ pool.id }}_team_{{ team.id }}"
+                                                           name="pool_{{ pool.id }}_team_{{ team.id }}"
+                                                           type="text" class="validate" value="{{ team.name }}">
+                                                    <label for="pool_{{ pool.id }}_name_{{ team.id }}">Nom de
+                                                        l'équipe</label>
+                                                </div>
+                                                <a href="{{ path('ajax_admin_team_delete', {'id': tournament.id}) }}" class="teamDeleteBtn red-text"><i
+                                                            class="fa fa-trash"></i></a>
+                                            {% endif %}
+                                        </div>
+                                    {% else %}
+                                        <div class="input-field">
+                                            <input required placeholder="Nom de l'équipe"
+                                                   id="pool_{{ pool.id }}_team_1"
+                                                   name="pool_{{ pool.id }}_team_1"
+                                                   type="text"
+                                                   class="validate">
+                                            <label for="pool_{{ pool.id }}_team_1">Nom de l'équipe</label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="row">
+                                    <div class="col s2 center push-s5">
+                                        <a class="btn waves-effect waves-light green teamAddBtn">
+                                            <i class="fa fa-plus"></i> Equipe
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="teams">
-                                <div class="input-field">
-                                    <input required placeholder="Nom de l'équipe" id="pool_1_name_1" name="pool_1_name_1"
-                                           type="text"
-                                           class="validate">
-                                    <label for="pool_1_name_1">Nom de l'équipe</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col s2 center push-s5">
-                                    <a class="btn waves-effect waves-light green teamAddBtn">
-                                        <i class="fa fa-plus"></i> Equipe
-                                    </a>
-                                </div>
+                            <div class="card-action">
+                                {% if loop.index == 1 %}
+                                    <a href="#" class="green-text">4 Pools Max</a>
+                                {% else %}
+                                    <a href="{{ path('ajax_admin_pool_delete', {'id': tournament.id}) }}" class="red-text poolDeleteBtn">Supprimer</a>
+                                {% endif %}
                             </div>
                         </div>
-                        <div class="card-action">
-                            <a href="#" class="green-text">4 Pools Max</a>
+                    {% else %}
+                        <div class="col pool card s12" id="pool_1">
+                            <div class="card-content">
+                                <div class="card-title">
+                                    <div class="input-field">
+                                        <input required placeholder="Nom de la Pool" id="pool_1_name" name="pool_1_name"
+                                               type="text"
+                                               value="Pool 1" class="validate">
+                                        <label for="pool_1_name">Nom de la Pool</label>
+                                    </div>
+                                </div>
+                                <div class="teams">
+                                    <div class="input-field">
+                                        <input required placeholder="Nom de l'équipe" id="pool_1_name_1"
+                                               name="pool_1_name_1"
+                                               type="text"
+                                               class="validate">
+                                        <label for="pool_1_name_1">Nom de l'équipe</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col s2 center push-s5">
+                                        <a class="btn waves-effect waves-light green teamAddBtn">
+                                            <i class="fa fa-plus"></i> Equipe
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-action">
+                                <a href="#" class="green-text">4 Pools Max</a>
+                            </div>
                         </div>
-                    </div>
+                    {% endfor %}
                 </div>
                 <div class="row">
                     <div class="col s2 center push-s5">
@@ -57,16 +124,18 @@
         <div class="card-content">
             <div class="card-title">
                 <div class="input-field">
-                    <input required placeholder="Nom de la Pool" id="pool_POOLID_name" name="pool_POOLID_name" type="text"
+                    <input required placeholder="Nom de la Pool" id="pool_POOLID_name" name="pool_POOLID_name"
+                           type="text"
                            value="Pool POOLID" class="validate">
                     <label for="pool_POOLID_name">Nom de la Pool</label>
                 </div>
             </div>
             <div class="teams">
                 <div class="input-field">
-                    <input required placeholder="Nom de l'équipe" id="pool_POOLID_name_1" name="pool_POOLID_name_1" type="text"
+                    <input required placeholder="Nom de l'équipe" id="pool_POOLID_team_1" name="pool_POOLID_team_1"
+                           type="text"
                            class="validate">
-                    <label for="pool_POOLID_name_1">Nom de l'équipe</label>
+                    <label for="pool_POOLID_team_1">Nom de l'équipe</label>
                 </div>
             </div>
             <div class="row">
@@ -78,99 +147,23 @@
             </div>
         </div>
         <div class="card-action">
-            <a href="#" class="red-text poolDeleteBtn">Supprimer</a>
+            <a href="{{ path('ajax_admin_pool_delete', {'id': tournament.id}) }}" class="red-text poolDeleteBtn">Supprimer</a>
         </div>
     </div>
     <div id="pool_POOLID_team_TEAMID" style="display: none">
         <div class="input-field inline">
             <a href="#" class="teamDeleteBtn"><i class="fas fa-trash-alt"></i></a>
-            <input required placeholder="Nom de l'équipe" id="pool_POOLID_name_TEAMID" name="pool_POOLID_name_TEAMID" type="text"
+            <input required placeholder="Nom de l'équipe" id="pool_POOLID_team_TEAMID" name="pool_POOLID_team_TEAMID"
+                   type="text"
                    class="validate">
-            <label for="pool_POOLID_name_TEAMID">Nom de l'équipe</label>
+            <label for="pool_POOLID_team_TEAMID">Nom de l'équipe</label>
         </div>
-        <a href="#" class="teamDeleteBtn red-text"><i class="fa fa-trash"></i></a>
+        <a href="{{ path('ajax_admin_team_delete', {'id': tournament.id}) }}" class="teamDeleteBtn red-text"><i
+                    class="fa fa-trash"></i></a>
     </div>
 
 
 {% endblock %}
 {% block javascripts %}
-    <script>
-        $(function () {
-
-            $('body').on('click', '#addPoolBtn', function(e) {
-                e.preventDefault();
-                console.log("Hello");
-                let nbPools = $('#pools div.pool').size(),
-                    poolDiv = $('#pools');
-                if (nbPools >= 4) {
-                    M.toast({html: '4 Pools Maximum', classes: 'red'})
-                } else {
-                    let poolHTML = $("#pool_POOLID").get(0).outerHTML;
-
-                    poolHTML = poolHTML.replace(/POOLID/gi, (nbPools + 1));
-                    poolHTML = poolHTML.replace(/COLWDTH/gi, (12 / (nbPools + 1)));
-
-                    $('.pool').each(function (i) {
-                        $(this).removeClass(function (index, className) {
-                            return (className.match(/s\d+/g) || []).join(' ');
-                        });
-                        $(this).addClass('s' + (12 / (nbPools + 1)));
-                    });
-
-                    poolDiv.append(poolHTML);
-
-                    $('#pool_' + (nbPools + 1))
-                        .show()
-                        .addClass('pool')
-                    ;
-
-                    M.updateTextFields();
-                }
-            });
-
-            $('body').on('click', '.poolDeleteBtn', function(e) {
-                e.preventDefault();
-
-                $(this).parent().parent().remove();
-
-                let nbPools = $('#pools div.pool').size();
-
-                $('.pool').each(function (i) {
-                    $(this).removeClass(function (index, className) {
-                        return (className.match(/s\d+/g) || []).join(' ');
-                    });
-                    $(this).addClass('s' + (12 / (nbPools)));
-                });
-
-
-            });
-
-            $('body').on('click', '.teamAddBtn', function(e) {
-                e.preventDefault();
-
-
-                let poolElement = $(this).parent().parent().parent().parent().attr('id'),
-                    poolID = parseInt(poolElement.match(/\d/g)[0]),
-                    teamsDiv = $('#' + poolElement + ' div.teams div.input-field'),
-                    nbTeams = teamsDiv.size(),
-                    teamHTML = $("#pool_POOLID_team_TEAMID").get(0).outerHTML;
-
-                teamHTML = teamHTML.replace(/POOLID/gi, poolID);
-                teamHTML = teamHTML.replace(/TEAMID/gi, (nbTeams + 1));
-
-                $('#' + poolElement + ' div.teams').append(teamHTML);
-
-                $("#pool_" + poolID + "_team_" + (nbTeams + 1)).show();
-
-                M.updateTextFields();
-
-            });
-
-            $('body').on('click', '.teamDeleteBtn', function (e) {
-                e.preventDefault();
-
-                $(this).parent().remove();
-            })
-        });
-    </script>
+    <script src="/js/newTeam.js"></script>
 {% endblock %}

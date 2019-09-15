@@ -13,7 +13,8 @@ use Service\App;
 
 require '../vendor/autoload.php';
 
-class AdminController extends BaseController {
+class AdminController extends BaseController
+{
 
     /**
      * @var EntityManagerInterface
@@ -29,7 +30,8 @@ class AdminController extends BaseController {
      * @param $router
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct($router, EntityManagerInterface $entityManager) {
+    public function __construct($router, EntityManagerInterface $entityManager)
+    {
         parent::__construct($router, $entityManager);
         $this->entityManager = $entityManager;
         $this->router = $router;
@@ -43,7 +45,8 @@ class AdminController extends BaseController {
     /**
      * Admin homepage functions "/admin/"
      */
-    public function index() {
+    public function index()
+    {
         $notifications = array();
         if (isset($_SESSION['logged'])) { // If just loggedin
             unset($_SESSION['logged']);
@@ -55,7 +58,8 @@ class AdminController extends BaseController {
     /**
      * Logout function "/admin/logout"
      */
-    public function logout() {
+    public function logout()
+    {
         session_destroy();
         header('Location: ' . $this->router->generate('homepage'));
         exit();
@@ -64,7 +68,8 @@ class AdminController extends BaseController {
     /**
      * Tournament list page, displays all registered tournament to edit/delete them "/admin/tournaments"
      */
-    public function tournamentList() {
+    public function tournamentList()
+    {
         /** @var Tournament[] $tournaments */
         $tournaments = $this->entityManager->getRepository("Entity\\Tournament")->findAll(); // Get all tournament registered
         echo $this->twig->render('admin/lists/tournaments.html.twig', ['tournaments' => $tournaments]);
@@ -73,14 +78,16 @@ class AdminController extends BaseController {
     /**
      * New tournament form request function, "GET:/admin/tournament/new"
      */
-    public function tournamentNew() {
+    public function tournamentNew()
+    {
         echo $this->twig->render('admin/manage/tournament/tournament_new.html.twig');
     }
 
     /**
      * Tournament submission function (New or Edit), "POST:/admin/tournament/submit"
      */
-    public function tournamentSubmitForm() {
+    public function tournamentSubmitForm()
+    {
         if (empty($_POST)) { // If nothing is posted
             header('Location: ' . $this->router->generate('admin_login'));
             exit();
@@ -90,7 +97,7 @@ class AdminController extends BaseController {
             if (isset($_POST['tournament_id'])) { // If tournament is edited
                 header('Location: ' . $this->router->generate('admin_tournament_edit', ['id' => intval($_POST['tournament_id'])])); // Redirect to edit page
                 exit();
-            }else {
+            } else {
                 echo $this->twig->render('admin/manage/tournament/tournament_new.html.twig', ['notifications' => $notifications]); // Display the new tournament form
                 exit();
             }
@@ -141,10 +148,9 @@ class AdminController extends BaseController {
      * @param string $id Tournament ID
      * Tournament edit request function, displays tournament management page "/admin/tournament/edit/[i:id]"
      */
-    public function tournamentEdit(string $id) {
+    public function tournamentEdit(string $id)
+    {
         $tournament = $this->findTournamentByID($id); // Try to find the tournament by the given id, If not found : redirected to tournaments list
-
-        dd($tournament);
 
         echo $this->twig->render('admin/manage/tournament/tournament_edit.html.twig', ['tournament' => $tournament]);
     }
@@ -153,7 +159,8 @@ class AdminController extends BaseController {
      * @param string $id Tournament ID that the teams relate to
      * New team request function, displays the form to add/edit teams "GET:/admin/teams/new/[i:id]"
      */
-    public function teamNew(string $id) {
+    public function teamNew(string $id)
+    {
         $tournament = $this->findTournamentByID($id); // Try to find the tournament by the given id, If not found : redirected to tournaments list
 
         echo $this->twig->render('admin/manage/team/team_new.html.twig', ['tournament' => $tournament]);
@@ -163,64 +170,86 @@ class AdminController extends BaseController {
     /**
      * @param string $id Tournament ID that the teams relate to
      * New team submission form, converts all posted data to entity objects "POST:/admin/teams/new/[i:id]"
+     * There are some "echo" for debugging, will be removed in final release TODO
      */
-    public function teamNewForm(string $id) {
+    public function teamNewForm(string $id)
+    {
         $tournament = $this->findTournamentByID($id); // Try to find the tournament by the given id, If not found : redirected to tournaments list
 
         unset($_POST['action']); // Remove 'action' from the array so there is only needed data
         $pools = array(); // Init pools array with teams
         foreach ($_POST as $field_name => $field_value) {
-            preg_match('/^pool_(\d)_name$/', $field_name, $poolMatches);
+            preg_match('/^pool_(\d+)_name$/', $field_name, $poolMatches);
             if (count($poolMatches) > 0) { // If the field name is a pool name
                 $poolID = intval($poolMatches[1]);
                 $pools[$poolID] = [ // Create Pool entry in the pools array
+                    'id' => $poolID,
                     'name' => $field_value,
                     'teams' => array()
                 ];
+                echo "Found Pool $field_name : $poolID\r\n";
             } else {
-                preg_match('/^pool_(\d)_name_(\d)$/', $field_name, $teamMatches);
+                preg_match('/^pool_(\d+)_team_(\d+)$/', $field_name, $teamMatches);
                 if (count($teamMatches) > 1) { // If the field name is a team name
-                    if (isset($pools[intval($teamMatches[1])])){ // If the team's pool is in the array
-                        $pools[intval($teamMatches[1])]['teams'][] = $field_value; // Add the team to the related pool
+                    if (isset($pools[intval($teamMatches[1])])) { // If the team's pool is in the array
+                        $teamID = $teamMatches[2];
+                        $pools[intval($teamMatches[1])]['teams'][] = [
+                            'id' => $teamID,
+                            'name' => $field_value
+                        ]; // Add the team to the related pool
+                        echo "Found Team $field_name : $teamID\r\n";
+                    }else {
+                        echo "Found but no corresponding pool $field_name : $field_value\r\n";
                     } // If not, do nothing
+                }else {
+                    echo "Found but no corresponding regex $field_name : $field_value\r\n";
                 }
             }
         }
 
 
         foreach ($pools as $poolArray) { // Convert the $pools array to Pool objects
+            $poolID = $poolArray['id'];
             $poolName = $poolArray['name'];
             $poolTeams = $poolArray['teams'];
             /** @var $pool Pool */
-            if (null == $pool = $tournament->getPool($poolName)) { // If this Pool do not exist in this tournament
+            if (null == $pool = $tournament->getPoolID($poolID)) { // If this Pool do not exist in this tournament
                 $pool = new Pool();
-                $pool->setName($poolName);
                 $pool->setTournament($tournament);
-
+                echo "Pool not found, Created: $poolName\r\n";
                 $tournament->addPool($pool);
-
+            }else {
+                echo "Pool found, Updated: $poolName\r\n";
             }
+            $pool->setName($poolName);
 
             foreach ($poolTeams as $poolTeam) { // Convert the $poolTeams array to Team objects
-                if (null == $team = $pool->getTeam($poolTeam)) { // If this Team do not exist in this pool
+                $teamID = $poolTeam['id'];
+                $teamName = $poolTeam['name'];
+                if (null == $team = $pool->getTeamID($teamID)) { // If this Team do not exist in this pool
                     $team = new Team();
-                    $team->setName($poolTeam);
                     $team->setPool($pool);
                     $team->setTournament($tournament);
 
-                    $this->entityManager->persist($team);
+                    echo "Team not found, Created: $teamName\r\n";
+
 
                     $pool->addTeam($team);
                     $tournament->addTeam($team);
-
+                }else {
+                    echo "Team found, Updated: $teamName\r\n";
                 }
+                $team->setName($teamName);
+                $this->entityManager->persist($team);
             }
             $this->entityManager->persist($pool);
 
-            $this->entityManager->persist($tournament);
             $this->entityManager->flush();
-        }
 
+        }
+//        dump($_POST);
+//        dump($pools);
+//        dump($tournament);
         header('Location: ' . $this->router->generate('admin_tournament_edit', ['id' => $tournament->getId()])); // Redirect to Tournament's edit page
         exit();
     }
@@ -228,10 +257,71 @@ class AdminController extends BaseController {
     /**
      * User list page function, displays a list of all registered users on the website
      */
-    public function userList() {
+    public function userList()
+    {
         /** @var User[] $users */
         $users = $this->entityManager->getRepository("Entity\\User")->findAll(); // Retrieve all User objects registered in database
         echo $this->twig->render('admin/lists/users.html.twig', ['users' => $users]);
+    }
+
+    /**
+     * @param string $id Tournament ID
+     * Ajax request to delete a team "/ajax/admin/team/delete"
+     */
+    public function ajaxTeamDelete(string $id)
+    {
+        $tournament = $this->findTournamentByID($id); // Try to find the tournament by the given id, If not found : redirected to tournaments list
+
+        $error = false;
+        $poolID = $_POST['pool_id'];
+        $teamID = $_POST['team_id'];
+
+        if ($pool = $tournament->getPoolID($poolID)) { // If this Pool exists in this tournament
+            if ($team = $pool->getTeamID($teamID)) { // If this Team exists in this pool
+                $this->entityManager->remove($team);
+                $this->entityManager->flush();
+            }else {
+                $error = true;
+            }
+        }else {
+            $error = true;
+        }
+
+        $data = [
+            'error' => $error,
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($data);
+    }
+
+    /**
+     * @param string $id Tournament ID
+     * Ajax request to delete an entire pool "/ajax/admin/pool/delete"
+     */
+    public function ajaxPoolDelete(string $id)
+    {
+        $tournament = $this->findTournamentByID($id); // Try to find the tournament by the given id, If not found : redirected to tournaments list
+
+        $error = false;
+        $poolID = $_POST['pool_id'];
+
+        if ($pool = $tournament->getPoolID($poolID)) { // If this Pool exists in this tournament
+            foreach ($pool->getTeams() as $team){
+                $this->entityManager->remove($team);
+            }
+            $this->entityManager->remove($pool);
+            $this->entityManager->flush();
+        }else {
+            $error = true;
+        }
+
+        $data = [
+            'error' => $error,
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($data);
     }
 
     /**
@@ -239,13 +329,15 @@ class AdminController extends BaseController {
      * @return Tournament
      * Function to try to find a tournament by an ID given in the URL
      */
-    private function findTournamentByID(string $id): Tournament{
+    private function findTournamentByID(string $id): Tournament
+    {
         $id = intval($id); // Convert string ID to integer
         /** @var Tournament $tournament */
-        if (!$tournament = $this->entityManager->getRepository('Entity\\Tournament')->find($id)) { // If tournament can't be find
+        if (!$tournament = $this->entityManager->getRepository('Entity\\Tournament')->findByID($id)) { // If tournament can't be find
             header('Location: ' . $this->router->generate('admin_tournament_list')); // Redirect to tournaments list
             exit();
         }
         return $tournament;
     }
+
 }

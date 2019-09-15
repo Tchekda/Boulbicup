@@ -9,7 +9,6 @@
         <th>Points</th>
         <th>Pool</th>
         <th>Editer</th>
-        <th>Supprimer</th>
     </tr>
     </thead>
     <tbody>
@@ -18,9 +17,8 @@
             <td>{{ team.id }}</td>
             <td>{{ team.name }}</td>
             <td>{{ team.points }}</td>
-            <td>{{ team.pool }}</td>
+            <td>{{ team.pool.name }}</td>
             <td><a href="{{ path('admin_tournament_edit', {'id': tournament.id}) }}"><i class="fa fa-edit green-text"></i></a></td>
-            <td><a href="#"><i class="fa fa-ban red-text"></i></a></td>
         </tr>
     {% endfor %}
     </tbody>

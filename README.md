@@ -8,6 +8,7 @@ Management website made for Ice Hockey tournaments at Boulogne-Billancourt (Fran
 
 ### Requirements
 * Working Web Server with PHP >= 7.2 (Apache, Nginx, other...)
+* Working Database Server (like MySQL, Postgres, other...)
 * [Composer](https://getcomposer.org/doc/00-intro.md) installed
 
 ### Installation
@@ -26,7 +27,13 @@ cd Boulbicup
 composer install --dev
 ```
 
-* Define environment variable `DATABASE_URL` (like `mysql://root:@localhost/boulbicup`)
+* Define environment variable `DATABASE_URL` (like `mysql://boulbicup:password@localhost/boulbicup`)
+
+* Run doctrine database population
+```bash
+vendor/bin/doctrine orm:schema-tool:create
+```
+
 
 * Create initial Admin account with a PHP script at the root of the project
 ```php

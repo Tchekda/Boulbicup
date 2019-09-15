@@ -3,10 +3,10 @@
 namespace Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
 
 
@@ -61,19 +61,19 @@ class Tournament {
 
     /**
      * @var Match[]
-     * @ORM\OneToMany(targetEntity="Match", mappedBy="tournament", cascade={"persist", "remove"},)
+     * @OneToMany(targetEntity="Match", mappedBy="tournament")
      */
     protected $matchs;
 
     /**
      * @var Team[]
-     * @ORM\OneToMany(targetEntity="Team", mappedBy="tournament")
+     * @OneToMany(targetEntity="Team", mappedBy="tournament")
      */
     protected $teams;
 
     /**
      * @var Pool[]
-     * @ORM\OneToMany(targetEntity="Pool", mappedBy="tournament")
+     * @OneToMany(targetEntity="Pool", mappedBy="tournament")
      */
     protected $pools;
 
@@ -240,9 +240,6 @@ class Tournament {
      * @return Pool[]
      */
     public function getPools() {
-        if (!$this->pools){
-            $this->pools = new ArrayCollection();
-        }
         return $this->pools;
     }
 
@@ -251,11 +248,21 @@ class Tournament {
      * @return Pool|null
      */
     public function getPool(string $name) {
-        if (!$this->pools){
-            $this->pools = new ArrayCollection();
-        }
         foreach ($this->pools as $pool){
             if ($pool->getName() == $name){
+                return $pool;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param string $name
+     * @return Pool|null
+     */
+    public function getPoolID(int $id) {
+        foreach ($this->pools as $pool){
+            if ($pool->getId() == $id){
                 return $pool;
             }
         }

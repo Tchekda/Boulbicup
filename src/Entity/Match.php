@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 
 
@@ -45,8 +46,8 @@ class Match {
     protected $away_score = 0;
 
     /**
-     * @var \DateInterval
-     * @Column(type="dateinterval")
+     * @var \DateTime
+     * @Column(type="datetime")
      */
     protected $time;
 
@@ -58,8 +59,8 @@ class Match {
 
     /**
      * @var Tournament
-     * @ORM\ManyToOne(targetEntity="Tournament", inversedBy="matchs")
-     * @ORM\JoinColumn(name="tournament_id", referencedColumnName="id")
+     * @ManyToOne(targetEntity="Tournament", inversedBy="matchs")
+     * @JoinColumn(name="tournament_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $tournament;
 
@@ -144,17 +145,17 @@ class Match {
     }
 
     /**
-     * @return \DateInterval
+     * @return \DateTime
      */
-    public function getTime(): \DateInterval {
+    public function getTime(): \DateTime {
         return $this->time;
     }
 
     /**
-     * @param \DateInterval $time
+     * @param \DateTime $time
      * @return Match
      */
-    public function setTime(\DateInterval $time): Match {
+    public function setTime(\DateTime $time): Match {
         $this->time = $time;
         return $this;
     }

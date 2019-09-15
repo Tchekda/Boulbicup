@@ -22,4 +22,16 @@ class TournamentRepository extends EntityRepository {
             ->getQuery()
             ->getResult();
     }
+
+    public function findByID(int $id){
+        return $this->createQueryBuilder('t')
+            ->leftJoin('t.pools', 'p')
+            //->leftJoin('t.matchs', 'm')
+            ->leftJoin('t.teams', 'te')
+            ->select('t', 'p', 'te')
+            ->andWhere('t.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

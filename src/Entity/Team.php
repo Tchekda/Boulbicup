@@ -7,13 +7,22 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 
 /**
  * @Entity(repositoryClass="Repository\TeamRepository")
- * @Entity @Table(name="team")
+ * @Table(name="team", uniqueConstraints={
+ *     @UniqueConstraint(name="team_tournament",
+ *            columns={"name", "tournament_id"}),
+ *     @UniqueConstraint(name="team_pool",
+ *            columns={"name", "pool_id"})
+ *    }))
  **/
-class Team {
+class Team
+{
 
     /**
      * @Id @GeneratedValue @Column(type="integer")
@@ -34,77 +43,88 @@ class Team {
     protected $points = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Pool", inversedBy="teams")
+     * @ManyToOne(targetEntity="Pool", inversedBy="teams")
+     * @JoinColumn(name="pool_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Pool
      */
     protected $pool;
 
     /**
      * @var Tournament
-     * @ORM\ManyToOne(targetEntity="Tournament", inversedBy="teams")
-     * @ORM\JoinColumn(name="tournament_id", referencedColumnName="id")
+     * @ManyToOne(targetEntity="Tournament", inversedBy="teams")
+     * @JoinColumn(name="tournament_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $tournament;
+
     /**
      * @return mixed
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
     /**
      * @param mixed $id
      */
-    public function setId($id): void {
+    public function setId($id): void
+    {
         $this->id = $id;
     }
 
     /**
      * @return mixed
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
     /**
      * @param mixed $name
      */
-    public function setName($name): void {
+    public function setName($name): void
+    {
         $this->name = $name;
     }
 
     /**
      * @return mixed
      */
-    public function getPoints() {
+    public function getPoints()
+    {
         return $this->points;
     }
 
     /**
      * @param mixed $points
      */
-    public function setPoints($points): void {
+    public function setPoints($points): void
+    {
         $this->points = $points;
     }
 
     /**
      * @return Pool
      */
-    public function getPool(): Pool {
+    public function getPool(): Pool
+    {
         return $this->pool;
     }
 
     /**
      * @param Pool $pool
      */
-    public function setPool(Pool $pool): void {
+    public function setPool(Pool $pool): void
+    {
         $this->pool = $pool;
     }
 
     /**
      * @return Tournament
      */
-    public function getTournament(): Tournament {
+    public function getTournament(): Tournament
+    {
         return $this->tournament;
     }
 
@@ -112,7 +132,8 @@ class Team {
      * @param Tournament $tournament
      * @return Team
      */
-    public function setTournament(Tournament $tournament): Team {
+    public function setTournament(Tournament $tournament): Team
+    {
         $this->tournament = $tournament;
         return $this;
     }

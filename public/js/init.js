@@ -12,6 +12,7 @@
         $('.materialboxed').materialbox();
 
         M.updateTextFields();
+
         $('.datepicker').datepicker({
             firstDay: 1,
             format: 'dd/mm/yyyy'

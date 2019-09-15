@@ -3,3 +3,4 @@ vendor/
 testdata.php
 /include/
 env.sh
+adminaccount.php

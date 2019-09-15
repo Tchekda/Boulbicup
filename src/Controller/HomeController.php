@@ -73,5 +73,13 @@ class HomeController extends BaseController {
         echo $this->twig->render('admin/login.html.twig', ['notifications' => $notifications]);
     }
 
+    /**
+     * Page that will be displayed en 404 Errors (Source: https://codepen.io/sqfreakz/pen/GJRJOY )
+     */
+    public function notFound()
+    {
+        echo $this->twig->render('home/404.html.twig');
+    }
+
 
 }
