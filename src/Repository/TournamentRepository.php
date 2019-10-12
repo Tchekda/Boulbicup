@@ -25,10 +25,10 @@ class TournamentRepository extends EntityRepository {
 
     public function findByID(int $id){
         return $this->createQueryBuilder('t')
+            ->leftJoin('t.matchs', 'm')
             ->leftJoin('t.pools', 'p')
-            //->leftJoin('t.matchs', 'm')
             ->leftJoin('t.teams', 'te')
-            ->select('t', 'p', 'te')
+            ->addSelect('t', 'p', 'te')
             ->andWhere('t.id = :id')
             ->setParameter('id', $id)
             ->getQuery()

@@ -37,7 +37,8 @@
                                                     <label for="pool_{{ pool.id }}_name_{{ team.id }}">Nom de
                                                         l'équipe</label>
                                                 </div>
-                                                <a href="{{ path('ajax_admin_team_delete', {'id': tournament.id}) }}" class="teamDeleteBtn red-text"><i
+                                                <a href="{{ path('ajax_admin_team_delete', {'id': tournament.id}) }}"
+                                                   class="teamDeleteBtn red-text"><i
                                                             class="fa fa-trash"></i></a>
                                             {% endif %}
                                         </div>
@@ -64,7 +65,8 @@
                                 {% if loop.index == 1 %}
                                     <a href="#" class="green-text">4 Pools Max</a>
                                 {% else %}
-                                    <a href="{{ path('ajax_admin_pool_delete', {'id': tournament.id}) }}" class="red-text poolDeleteBtn">Supprimer</a>
+                                    <a href="{{ path('ajax_admin_pool_delete', {'id': tournament.id}) }}"
+                                       class="red-text poolDeleteBtn">Supprimer</a>
                                 {% endif %}
                             </div>
                         </div>
@@ -165,5 +167,61 @@
 
 {% endblock %}
 {% block javascripts %}
-    <script src="/js/newTeam.js"></script>
+    <script>
+        $(function () { // TODO Redo AJAX calls
+            $('body').on('click', '#addPoolBtn', function (e) {
+                e.preventDefault();
+                let nbPools = $('#pools div.pool').size(),
+                    poolDiv = $('#pools');
+                if (nbPools >= 4) {
+                    M.toast({html: '4 Pools Maximum', classes: 'red'})
+                } else {
+                    let poolHTML = $("#pool_POOLID").get(0).outerHTML;
+                    poolHTML = poolHTML.replace(/POOLID/gi, (nbPools + 1));
+                    poolHTML = poolHTML.replace(/COLWDTH/gi, (12 / (nbPools + 1)));
+                    $('.pool').each(function (i) {
+                        $(this).removeClass(function (index, className) {
+                            return (className.match(/s\d+/g) || []).join(' ');
+                        });
+                        $(this).addClass('s' + (12 / (nbPools + 1)));
+                    });
+                    poolDiv.append(poolHTML);
+                    $('#pool_' + (nbPools + 1))
+                        .show()
+                        .addClass('pool')
+                    ;
+                    M.updateTextFields();
+                }
+            });
+            $('body').on('click', '.poolDeleteBtn', function (e) {
+                e.preventDefault();
+                $(this).parent().parent().remove();
+                let nbPools = $('#pools div.pool').size();
+                $('.pool').each(function (i) {
+                    $(this).removeClass(function (index, className) {
+                        return (className.match(/s\d+/g) || []).join(' ');
+                    });
+                    $(this).addClass('s' + (12 / (nbPools)));
+                });
+            });
+            $('body').on('click', '.teamAddBtn', function (e) {
+                e.preventDefault();
+                let poolElement = $(this).parent().parent().parent().parent().attr('id'),
+                    poolID = parseInt(poolElement.match(/\d/g)[0]),
+                    teamsDiv = $('#' + poolElement + ' div.teams div.input-field'),
+                    nbTeams = teamsDiv.size(),
+                    teamHTML = $("#pool_POOLID_team_TEAMID").get(0).outerHTML;
+                teamHTML = teamHTML.replace(/POOLID/gi, poolID);
+                teamHTML = teamHTML.replace(/TEAMID/gi, (nbTeams + 1));
+                $('#' + poolElement + ' div.teams').append(teamHTML);
+                $("#pool_" + poolID + "_team_" + (nbTeams + 1)).show();
+                M.updateTextFields();
+            });
+            $('body').on('click', '.teamDeleteBtn', function (e) {
+                e.preventDefault();
+                $(this).parent().remove();
+            })
+        });
+    </script>
+    {#    <script src="/js/newTeam.js"></script>#}
 {% endblock %}

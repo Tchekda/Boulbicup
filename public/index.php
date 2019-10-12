@@ -38,6 +38,7 @@ try {
         array('GET', '/admin/tournament/edit/[i:id]', array(TournamentController::class, 'tournamentEdit'), 'admin_tournament_edit'),
         array('GET', '/admin/teams/new/[i:id]', array(TeamController::class, 'teamNew'), 'admin_team_new'),
         array('POST', '/admin/teams/new/[i:id]', array(TeamController::class, 'teamNewForm'), 'admin_team_new_form'),
+        array('POST', '/ajax/admin/tournament/delete/[i:id]', array(TournamentController::class, 'ajaxTournamentDelete'), 'ajax_admin_tournament_delete'),
         array('POST', '/ajax/admin/team/delete/[i:id]', array(TeamController::class, 'ajaxTeamDelete'), 'ajax_admin_team_delete'),
         array('POST', '/ajax/admin/pool/delete/[i:id]', array(TeamController::class, 'ajaxPoolDelete'), 'ajax_admin_pool_delete'),
         array('GET', '/admin/users', array(AdminController::class, 'userList'), 'admin_user_list'),

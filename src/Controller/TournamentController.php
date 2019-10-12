@@ -37,8 +37,7 @@ class TournamentController extends BaseController {
     /**
      * Tournament list page, displays all registered tournament to edit/delete them "/admin/tournaments"
      */
-    public function tournamentList()
-    {
+    public function tournamentList() {
         /** @var Tournament[] $tournaments */
         $tournaments = $this->entityManager->getRepository("Entity\\Tournament")->findAll(); // Get all tournament registered
         echo $this->twig->render('admin/lists/tournaments.html.twig', ['tournaments' => $tournaments]);
@@ -47,16 +46,14 @@ class TournamentController extends BaseController {
     /**
      * New tournament form request function, "GET:/admin/tournament/new"
      */
-    public function tournamentNew()
-    {
+    public function tournamentNew() {
         echo $this->twig->render('admin/manage/tournament/tournament_new.html.twig');
     }
 
     /**
      * Tournament submission function (New or Edit), "POST:/admin/tournament/submit"
      */
-    public function tournamentSubmitForm()
-    {
+    public function tournamentSubmitForm() {
         if (empty($_POST)) { // If nothing is posted
             header('Location: ' . $this->router->generate('admin_login'));
             exit();
@@ -117,11 +114,55 @@ class TournamentController extends BaseController {
      * @param string $id Tournament ID
      * Tournament edit request function, displays tournament management page "/admin/tournament/edit/[i:id]"
      */
-    public function tournamentEdit(string $id)
-    {
+    public function tournamentEdit(string $id) {
         $tournament = $this->findTournamentByID($id); // Try to find the tournament by the given id, If not found : redirected to tournaments list
 
         echo $this->twig->render('admin/manage/tournament/tournament_edit.html.twig', ['tournament' => $tournament]);
+    }
+
+
+    /**
+     * @param string $id Tournament ID
+     * Ajax call to delete a tournament with all related objects POST "/ajax/admin/tournament/delete/[i:id]"
+     */
+    public function ajaxTournamentDelete(string $id) {
+
+        $tournament = $this->findTournamentByID($id);
+        $error = "";
+
+        dd($tournament); // TODO remove this line
+
+
+        foreach ($tournament->getMatchs() as $match) { // Delete all related matchs
+            $this->entityManager->remove($match);
+        }
+
+
+        foreach ($tournament->getTeams() as $team) { // Delete all related teams
+            $this->entityManager->remove($team);
+        }
+
+        foreach ($tournament->getPools() as $pool) { // Delete all related pool
+            $this->entityManager->remove($pool);
+        }
+
+
+        $this->entityManager->flush();
+
+
+        $this->entityManager->remove($tournament);
+
+
+        $success = true;
+
+        $data = [
+            'success' => $success,
+            'error' => $error,
+        ];
+
+        header('Content-Type: application/json');
+        echo json_encode($data);
+
     }
 
 }

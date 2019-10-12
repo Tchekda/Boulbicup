@@ -61,19 +61,19 @@ class Tournament {
 
     /**
      * @var Match[]
-     * @OneToMany(targetEntity="Match", mappedBy="tournament")
+     * @OneToMany(targetEntity="Match", mappedBy="tournament", cascade={"persist", "remove"})
      */
     protected $matchs;
 
     /**
      * @var Team[]
-     * @OneToMany(targetEntity="Team", mappedBy="tournament")
+     * @OneToMany(targetEntity="Team", mappedBy="tournament", cascade={"persist", "remove"})
      */
     protected $teams;
 
     /**
      * @var Pool[]
-     * @OneToMany(targetEntity="Pool", mappedBy="tournament")
+     * @OneToMany(targetEntity="Pool", mappedBy="tournament", cascade={"persist", "remove"})
      */
     protected $pools;
 
@@ -200,7 +200,7 @@ class Tournament {
     /**
      * @return Match[]
      */
-    public function getMatchs(): array {
+    public function getMatchs() {
         return $this->matchs;
     }
 

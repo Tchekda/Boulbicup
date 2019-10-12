@@ -2,16 +2,21 @@
 
 namespace Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 
 
 /**
- * @Entity @Table(name="match")
+ * @Entity(repositoryClass="Repository\MatchRepository")
+ * @Table(name="match", uniqueConstraints={
+ *        @UniqueConstraint(name="tournament_match_type",
+ *            columns={"tournament_id", "host_id", "away_id", "type"})
+ *    })
  **/
 class Match {
 
@@ -23,18 +28,20 @@ class Match {
 
     /**
      * @ManyToOne(targetEntity="Team")
+     * @JoinColumn(name="host_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Team
      */
     protected $host;
 
     /**
      * @ManyToOne(targetEntity="Team")
+     * @JoinColumn(name="away_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Team
      */
     protected $away;
 
     /**
-     * @Column(type="integer")
+     * @Column(type="integer",)
      * @var int
      */
     protected $host_score = 0;
