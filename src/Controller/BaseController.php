@@ -5,6 +5,7 @@ namespace Controller;
 
 
 use Doctrine\ORM\EntityManagerInterface;
+use Entity\Tournament;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFunction;
@@ -55,4 +56,19 @@ class BaseController {
         $this->template_params['tournaments'] = $tournaments;
     }
 
+    /**
+     * @param string $id
+     * @return Tournament
+     * Function to try to find a tournament by an ID given in the URL
+     */
+    public function findTournamentByID(string $id): Tournament
+    {
+        $id = intval($id); // Convert string ID to integer
+        /** @var Tournament $tournament */
+        if (!$tournament = $this->entityManager->getRepository('Entity\\Tournament')->findByID($id)) { // If tournament can't be find
+            header('Location: ' . $this->router->generate('admin_tournament_list')); // Redirect to tournaments list
+            exit();
+        }
+        return $tournament;
+    }
 }

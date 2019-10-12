@@ -2,6 +2,8 @@
 
 use Controller\AdminController;
 use Controller\HomeController;
+use Controller\TeamController;
+use Controller\TournamentController;
 
 
 // Require composer dependencies
@@ -30,14 +32,14 @@ try {
         array('POST', '/login', array(HomeController::class, 'loginForm'), 'admin_login_form'),
         array('GET', '/admin/', array(AdminController::class, 'index'), 'admin_index'),
         array('GET', '/admin/logout', array(AdminController::class, 'logout'), 'admin_logout'),
-        array('GET', '/admin/tournaments', array(AdminController::class, 'tournamentList'), 'admin_tournament_list'),
-        array('GET', '/admin/tournament/new', array(AdminController::class, 'tournamentNew'), 'admin_tournament_new'),
-        array('POST', '/admin/tournament/submit', array(AdminController::class, 'tournamentSubmitForm'), 'admin_tournament_new_form'),
-        array('GET', '/admin/tournament/edit/[i:id]', array(AdminController::class, 'tournamentEdit'), 'admin_tournament_edit'),
-        array('GET', '/admin/teams/new/[i:id]', array(AdminController::class, 'teamNew'), 'admin_team_new'),
-        array('POST', '/admin/teams/new/[i:id]', array(AdminController::class, 'teamNewForm'), 'admin_team_new_form'),
-        array('POST', '/ajax/admin/team/delete/[i:id]', array(AdminController::class, 'ajaxTeamDelete'), 'ajax_admin_team_delete'),
-        array('POST', '/ajax/admin/pool/delete/[i:id]', array(AdminController::class, 'ajaxPoolDelete'), 'ajax_admin_pool_delete'),
+        array('GET', '/admin/tournaments', array(TournamentController::class, 'tournamentList'), 'admin_tournament_list'),
+        array('GET', '/admin/tournament/new', array(TournamentController::class, 'tournamentNew'), 'admin_tournament_new'),
+        array('POST', '/admin/tournament/submit', array(TournamentController::class, 'tournamentSubmitForm'), 'admin_tournament_new_form'),
+        array('GET', '/admin/tournament/edit/[i:id]', array(TournamentController::class, 'tournamentEdit'), 'admin_tournament_edit'),
+        array('GET', '/admin/teams/new/[i:id]', array(TeamController::class, 'teamNew'), 'admin_team_new'),
+        array('POST', '/admin/teams/new/[i:id]', array(TeamController::class, 'teamNewForm'), 'admin_team_new_form'),
+        array('POST', '/ajax/admin/team/delete/[i:id]', array(TeamController::class, 'ajaxTeamDelete'), 'ajax_admin_team_delete'),
+        array('POST', '/ajax/admin/pool/delete/[i:id]', array(TeamController::class, 'ajaxPoolDelete'), 'ajax_admin_pool_delete'),
         array('GET', '/admin/users', array(AdminController::class, 'userList'), 'admin_user_list'),
     ));
 } catch (Exception $e) {
