@@ -36,10 +36,10 @@ class TeamController extends BaseController
         $this->entityManager = $entityManager;
         $this->router = $router;
 
-        if (!App::is_loggedin($this->entityManager)) { // If visitor is not loggedin
-            header('Location: ' . $this->router->generate('admin_login')); // Redirect to login page
-            exit();
-        }
+//        if (!App::is_loggedin($this->entityManager)) { // If visitor is not loggedin
+//            header('Location: ' . $this->router->generate('admin_login')); // Redirect to login page
+//            exit();
+//        }
     }
 
     /**
@@ -177,7 +177,7 @@ class TeamController extends BaseController
      * @param string $id Tournament ID
      * Ajax request to delete an entire pool "/ajax/admin/pool/delete"
      */
-    public function ajaxPoolDelete(string $id)
+    public function ajaxPoolDelete(string $id) //TODO add func in frontend
     {
         $tournament = $this->findTournamentByID($id); // Try to find the tournament by the given id, If not found : redirected to tournaments list
 

@@ -38,8 +38,10 @@
                                                         l'équipe</label>
                                                 </div>
                                                 <a href="{{ path('ajax_admin_team_delete', {'id': tournament.id}) }}"
-                                                   class="teamDeleteBtn red-text"><i
-                                                            class="fa fa-trash"></i></a>
+                                                   poolID="{{ pool.id }}" teamID="{{ team.id }}"
+                                                   class="teamDeleteBtn red-text">
+                                                    <i class="fa fa-trash"></i>
+                                                </a>
                                             {% endif %}
                                         </div>
                                     {% else %}
@@ -209,17 +211,52 @@
                 let poolElement = $(this).parent().parent().parent().parent().attr('id'),
                     poolID = parseInt(poolElement.match(/\d/g)[0]),
                     teamsDiv = $('#' + poolElement + ' div.teams div.input-field'),
-                    nbTeams = teamsDiv.size(),
+                    teamID = teamsDiv.size(),
                     teamHTML = $("#pool_POOLID_team_TEAMID").get(0).outerHTML;
+
+                var i;
+                for (i=0; i<100; i++){
+                    if ($("#pool_" + poolID + "_team_" + i).length === 0){
+                        teamID = i;
+                        break;
+                    }
+                }
                 teamHTML = teamHTML.replace(/POOLID/gi, poolID);
-                teamHTML = teamHTML.replace(/TEAMID/gi, (nbTeams + 1));
+                teamHTML = teamHTML.replace(/TEAMID/gi, teamID);
                 $('#' + poolElement + ' div.teams').append(teamHTML);
-                $("#pool_" + poolID + "_team_" + (nbTeams + 1)).show();
+                $("#pool_" + poolID + "_team_" + teamID).show();
                 M.updateTextFields();
             });
             $('body').on('click', '.teamDeleteBtn', function (e) {
                 e.preventDefault();
-                $(this).parent().remove();
+
+                let parent = $(this).parent();
+
+                var poolID = $(this).attr('poolID');
+
+                if (typeof attr !== typeof undefined && attr !== false) {
+                    $.ajax({
+                        url : $(this).attr('href'),
+                        type : 'POST',
+                        dataType: 'json',
+                        data: {
+                            'pool_id': poolID,
+                            'team_id': $(this).attr('teamID'),
+                        },
+                        success : function(data, statut){
+                            M.toast({html: 'L\'équipe a bien été supprimé', classes: "green"});
+                            parent.remove();
+                        },
+
+                        error : function(data, statut, erreur){
+                            M.toast({html: 'Impossible de supprimer l\'équipe', classes: "red"});
+                            console.log(data)
+                        }
+                    });
+                }else {
+                    parent.remove();
+                }
+
             })
         });
     </script>

@@ -39,23 +39,25 @@
             $(".tournamentDeleteLink").click(function(e){
                 e.preventDefault();
 
-                console.log($(this).attr('href'));
+                let parent = $(this).parent().parent();
 
                 $.ajax({
                     url : $(this).attr('href'),
                     type : 'POST',
                     dataType: 'json',
-                    success : function(data, statut){ // success est toujours en place, bien sûr !
-                        console.log(statut)
+                    success : function(data, statut){
+                        M.toast({html: 'Le tournoi a bien été supprimé', classes: "green"});
+                        parent.remove();
                     },
 
                     error : function(data, statut, erreur){
-                        console.log(data)
+                        M.toast({html: 'Impossible de supprimer le tournoi', classes: "red"});
+                        console.log(erreur)
                     }
                 });
 
             });
-            // M.toast({html: '{{ message }}', classes: "{{ color }}"});
+
         })(jQuery);
     </script>
 {% endblock %}

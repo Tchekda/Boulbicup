@@ -28,7 +28,7 @@ class TournamentRepository extends EntityRepository {
             ->leftJoin('t.matchs', 'm')
             ->leftJoin('t.pools', 'p')
             ->leftJoin('t.teams', 'te')
-            ->addSelect('t', 'p', 'te')
+            ->addSelect('t', 'm', 'p', 'te')
             ->andWhere('t.id = :id')
             ->setParameter('id', $id)
             ->getQuery()

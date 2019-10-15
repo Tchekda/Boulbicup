@@ -6,7 +6,6 @@ namespace Controller;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Entity\Tournament;
-use Entity\User;
 use Service\App;
 
 require '../vendor/autoload.php';
@@ -32,6 +31,11 @@ class TournamentController extends BaseController {
         parent::__construct($router, $entityManager);
         $this->entityManager = $entityManager;
         $this->router = $router;
+
+        if (!App::is_loggedin($this->entityManager)) { // If visitor is not loggedin
+            header('Location: ' . $this->router->generate('admin_login')); // Redirect to login page
+            exit();
+        }
     }
 
     /**
@@ -127,10 +131,9 @@ class TournamentController extends BaseController {
      */
     public function ajaxTournamentDelete(string $id) {
 
+
         $tournament = $this->findTournamentByID($id);
         $error = "";
-
-        dd($tournament); // TODO remove this line
 
 
         foreach ($tournament->getMatchs() as $match) { // Delete all related matchs
@@ -147,11 +150,9 @@ class TournamentController extends BaseController {
         }
 
 
-        $this->entityManager->flush();
-
-
         $this->entityManager->remove($tournament);
 
+        //$this->entityManager->flush();
 
         $success = true;
 
