@@ -238,7 +238,6 @@ class Match {
     }
 
 
-
     /**
      * @return Tournament
      */
