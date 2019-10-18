@@ -60,6 +60,12 @@ class Tournament {
     protected $category;
 
     /**
+     * @var int
+     * @Column(type="integer")
+     */
+    protected $state = 0;
+
+    /**
      * @var Match[]
      * @OneToMany(targetEntity="Match", mappedBy="tournament", cascade={"persist", "remove"})
      */
@@ -78,6 +84,22 @@ class Tournament {
     protected $pools;
 
     // TODO Delay time
+
+    const STATE_CREATED = 0;
+    const STATE_TEAM_FILLED = 1;
+    const STATE_GAME_GENERATED = 2;
+    const STATE_POOL_PHASE = 3;
+    const STATE_RANKING_PHASE = 4;
+    const STATE_FINISHED = 5;
+
+    protected $states = [
+        Tournament::STATE_CREATED => "Tournoi créé",
+        Tournament::STATE_TEAM_FILLED => "Equipes enregistrées",
+        Tournament::STATE_GAME_GENERATED => "Matchs générés",
+        Tournament::STATE_POOL_PHASE => "Phase de Pool",
+        Tournament::STATE_RANKING_PHASE => "Phase de Classement",
+        Tournament::STATE_FINISHED => "Tournoi terminé"
+    ];
 
     public function __construct() {
         $this->matchs = new ArrayCollection();
@@ -198,6 +220,45 @@ class Tournament {
     }
 
     /**
+     * @return int
+     */
+    public function getState(): int {
+        return $this->state;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStateName(): string {
+        return $this->states[$this->state];
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isState(int $state): bool {
+        return $state == $this->state;
+    }
+
+    /**
+     * @return array
+     */
+    public function getStates(): array {
+        return $this->states;
+    }
+
+
+    /**
+     * @param int $state
+     * @return Tournament
+     */
+    public function setState(int $state): Tournament {
+        $this->state = $state;
+        return $this;
+    }
+
+
+    /**
      * @return Match[]
      */
     public function getMatchs() {
@@ -235,7 +296,6 @@ class Tournament {
     }
 
 
-
     /**
      * @return Pool[]
      */
@@ -248,8 +308,8 @@ class Tournament {
      * @return Pool|null
      */
     public function getPool(string $name) {
-        foreach ($this->pools as $pool){
-            if ($pool->getName() == $name){
+        foreach ($this->pools as $pool) {
+            if ($pool->getName() == $name) {
                 return $pool;
             }
         }
@@ -261,8 +321,8 @@ class Tournament {
      * @return Pool|null
      */
     public function getPoolID(int $id) {
-        foreach ($this->pools as $pool){
-            if ($pool->getId() == $id){
+        foreach ($this->pools as $pool) {
+            if ($pool->getId() == $id) {
                 return $pool;
             }
         }
@@ -278,7 +338,7 @@ class Tournament {
         return $this;
     }
 
-    public function addPool(Pool $pool): Tournament{
+    public function addPool(Pool $pool): Tournament {
         $this->pools[] = $pool;
         return $this;
     }

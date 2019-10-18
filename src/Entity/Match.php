@@ -2,6 +2,7 @@
 
 namespace Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
@@ -65,11 +66,27 @@ class Match {
     protected $type = null;
 
     /**
+     * @var int
+     * @Column(type="integer")
+     */
+    protected $state = 0;
+
+    /**
      * @var Tournament
      * @ManyToOne(targetEntity="Tournament", inversedBy="matchs")
      * @JoinColumn(name="tournament_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $tournament;
+
+    const STATE_EXPECTED = 0;
+    const STATE_IN_PROGRESS = 1;
+    const STATE_FINISHED = 2;
+
+    protected $states = [
+        Match::STATE_EXPECTED => "Prévu",
+        Match::STATE_IN_PROGRESS => "En cours",
+        Match::STATE_FINISHED => "Terminé"
+    ];
 
     /**
      * @return int
@@ -180,6 +197,43 @@ class Match {
      */
     public function setType(string $type): Match {
         $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getState(): int {
+        return $this->state;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStateName(): string {
+        return $this->states[$this->state];
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isState(int $state): bool {
+        return $state == $this->state;
+    }
+
+    /**
+     * @return array
+     */
+    public function getStates(): array {
+        return $this->states;
+    }
+
+    /**
+     * @param int $state
+     * @return Match
+     */
+    public function setState(int $state): Match {
+        $this->state = $state;
         return $this;
     }
 

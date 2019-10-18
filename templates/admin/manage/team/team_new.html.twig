@@ -136,7 +136,7 @@
             </div>
             <div class="teams">
                 <div class="input-field">
-                    <input required placeholder="Nom de l'équipe" id="pool_POOLID_team_1" name="pool_POOLID_team_1"
+                    <input required placeholder="Nom de l'équipe" id="pool_POOLID_team_0" name="pool_POOLID_team_0"
                            type="text"
                            class="validate">
                     <label for="pool_POOLID_team_1">Nom de l'équipe</label>
@@ -170,7 +170,7 @@
 {% endblock %}
 {% block javascripts %}
     <script>
-        $(function () { // TODO Redo AJAX calls
+        $(function () {
             $('body').on('click', '#addPoolBtn', function (e) {
                 e.preventDefault();
                 let nbPools = $('#pools div.pool').size(),
@@ -197,8 +197,36 @@
             });
             $('body').on('click', '.poolDeleteBtn', function (e) {
                 e.preventDefault();
-                $(this).parent().parent().remove();
-                let nbPools = $('#pools div.pool').size();
+
+                let nbPools = $('#pools div.pool').size(),
+                    poolID = $(this).parent().parent().attr('id'),
+                    parent = $(this).parent().parent();
+                if (typeof poolID !== typeof undefined && poolID !== false) {
+                    $.ajax({
+                        url : $(this).attr('href'),
+                        type : 'POST',
+                        dataType: 'json',
+                        data: {
+                            'pool_id': poolID,
+                        },
+                        success : function(data, statut){
+                            if (data.error !== false){
+                                M.toast({html: 'Impossible de supprimer la pool', classes: "red"});
+                                console.log(data)
+                            }else {
+                                M.toast({html: 'La pool a bien été supprimée', classes: "green"});
+                                parent.remove();
+                            }
+
+                        },
+
+                        error : function(data, statut, erreur){
+
+                        }
+                    });
+                }else {
+                    parent.remove();
+                }
                 $('.pool').each(function (i) {
                     $(this).removeClass(function (index, className) {
                         return (className.match(/s\d+/g) || []).join(' ');
@@ -234,7 +262,7 @@
 
                 var poolID = $(this).attr('poolID');
 
-                if (typeof attr !== typeof undefined && attr !== false) {
+                if (typeof poolID !== typeof undefined && poolID !== false) {
                     $.ajax({
                         url : $(this).attr('href'),
                         type : 'POST',

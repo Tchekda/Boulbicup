@@ -86,6 +86,7 @@ class TournamentController extends BaseController {
         // Filling general data
         $tournament->setName($_POST['name']);
         $tournament->setCategory(intval($_POST['category']));
+        $tournament->setState(intval($_POST['state']));
 
         // Convert string dates to DateTime objects
         $start_datetime_first = DateTime::createFromFormat('d/m/Y H:i', $_POST['date_first'] . ' ' . $_POST['start_time_first']);

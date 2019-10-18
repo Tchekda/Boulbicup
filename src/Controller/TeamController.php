@@ -57,7 +57,7 @@ class TeamController extends BaseController
     /**
      * @param string $id Tournament ID that the teams relate to
      * New team submission form, converts all posted data to entity objects "POST:/admin/teams/new/[i:id]"
-     * There are some "echo" for debugging, will be removed in final release TODO
+     * There are some "echo" for debugging, will be removed in final release
      */
     public function teamNewForm(string $id)
     {
@@ -131,12 +131,17 @@ class TeamController extends BaseController
             }
             $this->entityManager->persist($pool);
 
-            $this->entityManager->flush();
 
         }
+
+        if ($tournament->getState() == Tournament::STATE_CREATED){
+            $tournament->setState(Tournament::STATE_TEAM_FILLED);
+        }
+        $this->entityManager->flush();
+
 //        dump($_POST);
 //        dump($pools);
-//        dump($tournament);
+//        dd($tournament);
         header('Location: ' . $this->router->generate('admin_tournament_edit', ['id' => $tournament->getId()])); // Redirect to Tournament's edit page
         exit();
     }
@@ -177,16 +182,17 @@ class TeamController extends BaseController
      * @param string $id Tournament ID
      * Ajax request to delete an entire pool "/ajax/admin/pool/delete"
      */
-    public function ajaxPoolDelete(string $id) //TODO add func in frontend
+    public function ajaxPoolDelete(string $id)
     {
         $tournament = $this->findTournamentByID($id); // Try to find the tournament by the given id, If not found : redirected to tournaments list
 
         $error = false;
-        $poolID = $_POST['pool_id'];
+        preg_match('/(\d+)/', $_POST['pool_id'], $matches);
+        $poolID = $matches[1];
 
         if ($pool = $tournament->getPoolID($poolID)) { // If this Pool exists in this tournament
-            foreach ($pool->getTeams() as $team){
-                $this->entityManager->remove($team);
+            foreach ($pool->getTeams() as $team){ // Select all related teams
+                $this->entityManager->remove($team); // Delete them
             }
             $this->entityManager->remove($pool);
             $this->entityManager->flush();

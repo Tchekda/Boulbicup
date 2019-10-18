@@ -1,15 +1,23 @@
 <form action="{{ path('admin_tournament_new_form') }}" method="POST" class="col s12">
     <div class="row">
-        <div class="input-field col m6 s12">
+        <div class="input-field col m4 s12">
             <input required placeholder="Nom du Tournoi/Trophée" id="name" value="{{ tournament.name }}"
                    name="name" type="text" class="validate">
             <label for="name">Nom du Tournoi/Trophée</label>
         </div>
-        <div class="input-field col m6 s12">
+        <div class="input-field col m4 s12">
             <input required placeholder="Catégorie" id="category" value="{{ tournament.category }}"
                    name="category" type="number"
                    class="validate">
             <label for="category">Catégorie</label>
+        </div>
+        <div class="input-field col m4 s12">
+            <select id="state" name="state">
+                {% for id, state in tournament.states %}
+                    <option value="{{ id }}" {{ tournament.state == id ? 'selected' }}>{{ state }}</option>
+                {% endfor %}
+            </select>
+            <label for="state">Materialize Select</label>
         </div>
     </div>
     <div class="row">

@@ -11,6 +11,7 @@
             <th>Dates</th>
             <th>Nom</th>
             <th>Catégorie</th>
+            <th>Etat</th>
             <th>Editer</th>
             <th>Supprimer</th>
         </tr>
@@ -25,6 +26,7 @@
                 </td>
                 <td>{{ tournament.name }}</td>
                 <td>U{{ tournament.category }}</td>
+                <td>{{ tournament.stateName }}</td>
                 <td><a href="{{ path('admin_tournament_edit', {'id': tournament.id}) }}"><i class="fa fa-edit green-text"></i></a></td>
                 <td><a class="tournamentDeleteLink" href="{{ path('ajax_admin_tournament_delete', {'id': tournament.id}) }}"><i class="fa fa-ban red-text"></i></a></td>
             </tr>
