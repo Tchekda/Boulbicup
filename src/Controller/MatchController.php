@@ -45,7 +45,10 @@ class MatchController extends BaseController
 
         $matchGenerator = new MatchGenerator($this->entityManager, $tournament);
 
-        dd($matchGenerator->generateTournamentMatchs());
+        $matchs = $matchGenerator->generateTournamentMatchs();
+
+        header('Location: ' . $this->router->generate('admin_tournament_edit', ['id' => $tournament->getId()])); // Redirect to tournament's edit page
+        exit();
     }
 
 

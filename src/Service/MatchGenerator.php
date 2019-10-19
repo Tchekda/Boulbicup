@@ -140,7 +140,9 @@ class MatchGenerator {
                 $previousGameTime->add(new DateInterval("PT20M")); //Mounir
 
         }
-
+        if ($this->tournament->getState() < Tournament::STATE_GAME_GENERATED){
+            $this->tournament->setState(Tournament::STATE_GAME_GENERATED);
+        }
         $this->entityManager->flush();
 
         return $matchsEntities;

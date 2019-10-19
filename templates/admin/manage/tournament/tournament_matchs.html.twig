@@ -25,9 +25,9 @@
             <td>{{ match.id }}</td>
             <td>{{ match.host.name }}</td>
             <td>{{ match.away.name }}</td>
-            <td>Heure</td>
-            <td>{{ match.type }}</td>
-            <td>{{ match.host_score }} : {{ match.away_score }}</td>
+            <td>{{ match.time|date("H:i") }}</td>
+            <td>{{ match.typename }}</td>
+            <td>{{ match.hostscore }} : {{ match.awayscore }}</td>
             <td><a href="{{ path('admin_tournament_edit', {'id': tournament.id}) }}"><i class="fa fa-edit green-text"></i></a></td>
         </tr>
     {% endfor %}

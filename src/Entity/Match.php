@@ -78,6 +78,14 @@ class Match {
      */
     protected $tournament;
 
+    const TYPE_POOL = 0;
+    const TYPE_RANKING = 1;
+
+    protected $types = [
+        Match::TYPE_POOL => "Match de Pool",
+        Match::TYPE_RANKING => "Match de Classement"
+    ];
+
     const STATE_EXPECTED = 0;
     const STATE_IN_PROGRESS = 1;
     const STATE_FINISHED = 2;
@@ -190,6 +198,23 @@ class Match {
     public function getType(): string {
         return $this->type;
     }
+
+
+    /**
+     * @return string
+     */
+    public function getTypeName(): string {
+        return $this->types[$this->type];
+    }
+
+    /**
+     * @return array
+     */
+    public function getTypes(): array {
+        return $this->types;
+    }
+
+
 
     /**
      * @param string $type
