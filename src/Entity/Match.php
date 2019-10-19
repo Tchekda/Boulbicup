@@ -61,9 +61,9 @@ class Match {
 
     /**
      * @var string
-     * @Column(type="string", nullable=true)
+     * @Column(type="string")
      */
-    protected $type = null;
+    protected $type = 0;
 
     /**
      * @var int

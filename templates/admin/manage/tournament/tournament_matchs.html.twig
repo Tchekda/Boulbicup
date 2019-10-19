@@ -1,0 +1,36 @@
+<div class="center">
+    {% if tournament.isState(0) and tournament.teams|length == 0 %}
+        <a class="btn green disabled" href="#">Aucune équipe</a>
+    {% elseif tournament.isState(1) %}
+        <a class="btn green" href="{{ path('admin_match_generate', {'id': tournament.id}) }}">Générer les matchs</a>
+    {% else %}
+        <a class="btn green" href="{{ path('admin_team_new', {'id': tournament.id}) }}">Regénérer les matchs</a>
+    {% endif %}
+</div>
+<table class="striped highlight centered responsive-table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Domicile</th>
+        <th>Visiteur</th>
+        <th>Heure</th>
+        <th>Type</th>
+        <th>Score</th>
+        <th>Editer le score</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for match in tournament.matchs %}
+        <tr>
+            <td>{{ match.id }}</td>
+            <td>{{ match.host.name }}</td>
+            <td>{{ match.away.name }}</td>
+            <td>Heure</td>
+            <td>{{ match.type }}</td>
+            <td>{{ match.host_score }} : {{ match.away_score }}</td>
+            <td><a href="{{ path('admin_tournament_edit', {'id': tournament.id}) }}"><i class="fa fa-edit green-text"></i></a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+
+</table>

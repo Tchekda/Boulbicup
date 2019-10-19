@@ -2,6 +2,7 @@
 
 use Controller\AdminController;
 use Controller\HomeController;
+use Controller\MatchController;
 use Controller\TeamController;
 use Controller\TournamentController;
 
@@ -42,6 +43,7 @@ try {
         array('POST', '/ajax/admin/team/delete/[i:id]', array(TeamController::class, 'ajaxTeamDelete'), 'ajax_admin_team_delete'),
         array('POST', '/ajax/admin/pool/delete/[i:id]', array(TeamController::class, 'ajaxPoolDelete'), 'ajax_admin_pool_delete'),
         array('GET', '/admin/users', array(AdminController::class, 'userList'), 'admin_user_list'),
+        array('GET', '/admin/matchs/generate/[i:id]', array(MatchController::class, 'generateMatchs'), 'admin_match_generate'),
     ));
 } catch (Exception $e) {
     die("Can't register routes : " . $e->getMessage());

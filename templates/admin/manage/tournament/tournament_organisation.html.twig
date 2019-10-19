@@ -1,5 +1,6 @@
 <form action="{{ path('admin_tournament_new_form') }}" method="POST" class="col s12">
     <div class="row">
+        <h4>Type de tournoi</h4>
         <div class="input-field col m4 s12">
             <input required placeholder="Nom du Tournoi/Trophée" id="name" value="{{ tournament.name }}"
                    name="name" type="text" class="validate">
@@ -21,6 +22,7 @@
         </div>
     </div>
     <div class="row">
+        <h4>1er jour</h4>
         <div class="input-field col m4 s12">
             <input required type="text" id="date_first" name="date_first"
                    value="{{ tournament.startdatetimefirstday|date("d/m/Y") }}" class="datepicker">
@@ -32,12 +34,14 @@
             <label for="start_time_first">Heure de début des matchs 1er Jour</label>
         </div>
         <div class="input-field col m4 s12">
-            <input required type="text" id="end_time_first" name="end_time_first"
+            <input type="text" id="end_time_first" name="end_time_first"
                    value="{{ tournament.enddatetimefirstday|date("H:i") }}" class="timepicker">
-            <label for="end_time_first">Heure de fin des matchs 1er Jour</label>
+            <label for="end_time_first">Heure de fin des matchs 1er Jour (facultatif si 1 jour)</label>
         </div>
     </div>
+    {% if tournament.startdatetimesecondday %}
     <div class="row">
+        <h4>2nd Jour</h4>
         <div class="input-field col m4 s12">
             <input type="text" id="date_second" name="date_second"
                    value="{{ tournament.startdatetimesecondday|date("d/m/Y") }}" class="datepicker">
@@ -52,6 +56,32 @@
             <input type="text" id="end_time_second" name="end_time_second"
                    value="{{ tournament.enddatetimesecondday|date("H:i") }}" class="timepicker">
             <label for="end_time_second">Heure de fin des matchs 2nd Jour </label>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <h4>Timings</h4>
+        <div class="input-field col m3 s12">
+            <input required placeholder="Temps de jeu" id="gametime" value="{{ tournament.gametime }}"
+                   name="gametime" type="number" class="validate">
+            <label for="gametime">Temps de jeu</label>
+        </div>
+        <div class="input-field col m3 s12">
+            <input required placeholder="Temps d'échauffement" id="warmup" value="{{ tournament.warmuptime }}"
+                   name="warmup" type="number" class="validate">
+            <label for="warmup">Temps d'échauffement</label>
+        </div>
+        <div class="input-field col m3 s12">
+            <input required placeholder="Battement après match" id="postgame" value="{{ tournament.postgametime }}"
+                   name="postgame" type="number"
+                   class="validate">
+            <label for="postgame">Battement après match</label>
+        </div>
+        <div class="input-field col m3 s12">
+            <input required placeholder="Fréquence surfacage" id="refection" value="{{ tournament.icerefectionfrequence }}"
+                   name="refection" type="number"
+                   class="validate">
+            <label for="refection">Fréquence surfacage</label>
         </div>
     </div>
     <input type="hidden" name="tournament_id" value="{{ tournament.id }}">

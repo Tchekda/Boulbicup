@@ -87,6 +87,10 @@ class TournamentController extends BaseController {
         $tournament->setName($_POST['name']);
         $tournament->setCategory(intval($_POST['category']));
         $tournament->setState(intval($_POST['state']));
+        $tournament->setGameTime(intval($_POST['gametime']));
+        $tournament->setWarmupTime(intval($_POST['warmup']));
+        $tournament->setPostgameTime(intval($_POST['postgame']));
+        $tournament->setIceRefectionFrequence(intval($_POST['refection']));
 
         // Convert string dates to DateTime objects
         $start_datetime_first = DateTime::createFromFormat('d/m/Y H:i', $_POST['date_first'] . ' ' . $_POST['start_time_first']);
@@ -98,11 +102,11 @@ class TournamentController extends BaseController {
                 // Filling the second day values
                 $tournament->setStartDatetimeSecondDay($start_datetime_second);
                 $tournament->setEndDatetimeSecondDay($end_datetime_second);
+                $tournament->setEndDatetimeFirstday($end_datetime_first);
             }
         }
         // Filling first day values
         $tournament->setStartDatetimeFirstday($start_datetime_first);
-        $tournament->setEndDatetimeFirstday($end_datetime_first);
 
         if (!$tournament->getId()) { // If tournament do not already exists (New)
             $this->entityManager->persist($tournament);

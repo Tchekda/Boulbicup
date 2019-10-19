@@ -25,12 +25,13 @@
                         <label for="start_time_first">Heure de début des matchs 1er Jour</label>
                     </div>
                     <div class="input-field col s4">
-                        <input required type="text" id="end_time_first" name="end_time_first" class="timepicker">
-                        <label for="end_time_first">Heure de fin des matchs 1er Jour</label>
+                        <input type="text" id="end_time_first" name="end_time_first" class="timepicker">
+                        <label for="end_time_first">Heure de fin des matchs 1er Jour (facultatif si 1 jour)</label>
                     </div>
                 </div>
                 <div class="row">
-                    <h4>Second Jour (Si tournoi sur un jour, mettre date antérieure au 1er Jour)</h4>
+                    <h4>2nd Jour</h4>
+                    <p>Si le tournoi ne dure qu'un seul jour : ne rien mettre ou sélectionner un jour antérieur au 1er</p>
                     <div class="input-field col s4">
                         <input type="text" id="date_second" name="date_second" class="datepicker">
                         <label for="date_second">2nd Jour</label>
@@ -42,6 +43,31 @@
                     <div class="input-field col s4">
                         <input type="text" id="end_time_second" name="end_time_second" class="timepicker">
                         <label for="end_time_second">Heure de fin des matchs 2nd Jour </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <h4>Timings</h4>
+                    <div class="input-field col m3 s12">
+                        <input required placeholder="Temps de jeu" id="gametime" value="40"
+                               name="gametime" type="number" class="validate">
+                        <label for="gametime">Temps de jeu</label>
+                    </div>
+                    <div class="input-field col m3 s12">
+                        <input required placeholder="Temps d'échauffement" id="warmup" value="10"
+                               name="warmup" type="number" class="validate">
+                        <label for="warmup">Temps d'échauffement</label>
+                    </div>
+                    <div class="input-field col m3 s12">
+                        <input required placeholder="Battement après match" id="postgame" value="5"
+                               name="postgame" type="number"
+                               class="validate">
+                        <label for="postgame">Battement après match</label>
+                    </div>
+                    <div class="input-field col m3 s12">
+                        <input required placeholder="Fréquence surfacage" id="refection" value="4"
+                               name="refection" type="number"
+                               class="validate">
+                        <label for="refection">Fréquence surfacage</label>
                     </div>
                 </div>
                 <div class="row">

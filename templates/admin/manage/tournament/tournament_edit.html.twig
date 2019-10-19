@@ -3,22 +3,21 @@
 {% block body %}
     <div class="container">
         <div class="row">
-            <div class="row">
-                <div class="col s12">
-                    <ul class="tabs">
-                        <li class="tab col s4"><a class="active" href="#organisation">Organisation</a></li>
-                        <li class="tab col s4"><a href="#teams">Equipes</a></li>
-                        <li class="tab col s4"><a href="#matchs">Matchs</a></li>
-                    </ul>
-                </div>
-                <div id="organisation" class="col s12">
-                    {% include 'admin/manage/tournament/tournament_organisation.html.twig' %}
-                </div>
-                <div id="teams" class="col s12">
-                    {% include 'admin/manage/tournament/tournament_teams.html.twig' %}
-
-                </div>
-                <div id="matchs" class="col s12">Test 3</div>
+            <div class="col s12">
+                <ul class="tabs">
+                    <li class="tab col s4"><a class="active" href="#organisation">Organisation</a></li>
+                    <li class="tab col s4"><a href="#teams">Equipes</a></li>
+                    <li class="tab col s4"><a href="#matchs">Matchs</a></li>
+                </ul>
+            </div>
+            <div id="organisation" class="col s12">
+                {% include 'admin/manage/tournament/tournament_organisation.html.twig' %}
+            </div>
+            <div id="teams" class="col s12">
+                {% include 'admin/manage/tournament/tournament_teams.html.twig' %}
+            </div>
+            <div id="matchs" class="col s12">
+                {% include 'admin/manage/tournament/tournament_matchs.html.twig' %}
             </div>
         </div>
     </div>

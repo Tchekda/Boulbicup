@@ -3,6 +3,7 @@
 namespace Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
@@ -31,7 +32,7 @@ class Tournament {
 
     /**
      * @var \DateTime
-     * @Column(type="datetime")
+     * @Column(type="datetime", nullable=true)
      */
     protected $end_datetime_first_day;
 
@@ -63,7 +64,31 @@ class Tournament {
      * @var int
      * @Column(type="integer")
      */
+    protected $game_time = 40;
+
+    /**
+     * @var int
+     * @Column(type="integer")
+     */
     protected $state = 0;
+
+    /**
+     * @var int
+     * @Column(type="integer")
+     */
+    protected $warmup_time = 10;
+
+    /**
+     * @var int
+     * @Column(type="integer")
+     */
+    protected $postgame_time = 5;
+
+    /**
+     * @var int
+     * @Column(type="integer")
+     */
+    protected $ice_refection_frequence = 4;
 
     /**
      * @var Match[]
@@ -222,6 +247,23 @@ class Tournament {
     /**
      * @return int
      */
+    public function getGameTime(): int {
+        return $this->game_time;
+    }
+
+    /**
+     * @param int $game_time
+     * @return Tournament
+     */
+    public function setGameTime(int $game_time): Tournament {
+        $this->game_time = $game_time;
+        return $this;
+    }
+
+
+    /**
+     * @return int
+     */
     public function getState(): int {
         return $this->state;
     }
@@ -254,6 +296,54 @@ class Tournament {
      */
     public function setState(int $state): Tournament {
         $this->state = $state;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWarmupTime(): int {
+        return $this->warmup_time;
+    }
+
+    /**
+     * @param int $warmup_time
+     * @return Tournament
+     */
+    public function setWarmupTime(int $warmup_time): Tournament {
+        $this->warmup_time = $warmup_time;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPostgameTime(): int {
+        return $this->postgame_time;
+    }
+
+    /**
+     * @param int $postgame_time
+     * @return Tournament
+     */
+    public function setPostgameTime(int $postgame_time): Tournament {
+        $this->postgame_time = $postgame_time;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIceRefectionFrequence(): int {
+        return $this->ice_refection_frequence;
+    }
+
+    /**
+     * @param int $ice_refection_frequence
+     * @return Tournament
+     */
+    public function setIceRefectionFrequence(int $ice_refection_frequence): Tournament {
+        $this->ice_refection_frequence = $ice_refection_frequence;
         return $this;
     }
 
