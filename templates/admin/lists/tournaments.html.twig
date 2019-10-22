@@ -49,6 +49,7 @@
                     dataType: 'json',
                     success : function(data, statut){
                         M.toast({html: 'Le tournoi a bien été supprimé', classes: "green"});
+                        console.log(data);
                         parent.remove();
                     },
 

@@ -40,7 +40,7 @@ class MatchGenerator {
 
         $matchsEntities = array();
         $previousGameTime = $this->tournament->getStartDatetimeFirstday();
-        $i = 0;
+        $i = 1;
         foreach ($matches as $match) {
             $matchEntity = new Match();
             if (count($match) == 3) { // reference game
@@ -51,22 +51,31 @@ class MatchGenerator {
                 $matchEntity->setHost($match[0]);
                 $matchEntity->setAway($match[1]);
             }
-            $matchEntity->setTime($previousGameTime);
+            $matchEntity->setTime(clone $previousGameTime);
             $matchEntity->setTournament($this->tournament);
             $this->entityManager->persist($matchEntity);
             array_push($matchsEntities, $matchEntity);
-            $previousGameTime->add(new DateInterval("PT" . $this->tournament->getGameTime() . "M"));
-            if ($this->tournament->getEndDatetimeFirstday() != null) {
-                if ($previousGameTime->format('Hi') > $this->tournament->getEndDatetimeFirstday()->format('Hi')) {
+            $previousGameTime->add(
+                new DateInterval("PT" . (
+                    $this->tournament->getWarmupTime() +
+                    $this->tournament->getGameTime() +
+                    $this->tournament->getPostgameTime()
+                    )
+                    . "M")
+            );
+            if ($this->tournament->getEndDatetimeFirstday()  != null) {
+                if ($previousGameTime > $this->tournament->getEndDatetimeFirstday() and $previousGameTime < $this->tournament->getStartDatetimeSecondDay()) {
                     $previousGameTime->setTime(
                         intval($this->tournament->getStartDatetimeSecondDay()->format('H')),
                         intval($this->tournament->getStartDatetimeSecondDay()->format('i'))
                     );
                     date_add($previousGameTime, date_interval_create_from_date_string('1 days'));
+                    $i = 0;
                 }
             }
-            if ($i % $this->tournament->getIceRefectionFrequence() == 0 and $i != 0) {
-                $previousGameTime->add(new DateInterval("PT20M")); //Mounir
+            if (($i % $this->tournament->getIceRefectionFrequence()) == 0 and $i != 0) {
+                $previousGameTime->add(new DateInterval("PT15M"));
+                echo "Surfacage";
             }
             $i++;
         }

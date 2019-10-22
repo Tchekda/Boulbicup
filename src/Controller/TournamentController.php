@@ -157,7 +157,7 @@ class TournamentController extends BaseController {
 
         $this->entityManager->remove($tournament);
 
-        //$this->entityManager->flush();
+        $this->entityManager->flush();
 
         $success = true;
 
