@@ -56,6 +56,7 @@ class Team
      */
     protected $tournament;
 
+
     /**
      * @return mixed
      */

@@ -32,6 +32,136 @@ class MatchGenerator {
      * This algorithm is pretty difficult : I don't event remember how I've done it....
      */
     public function generateTournamentMatchs() {
+        $matches = $this->generatePoolMatchs();
+
+        foreach ($this->generateRankingReferenceMatchs() as $match){
+            $matches[] = $match;
+        }
+
+        $matchsEntities = array();
+        $previousGameTime = $this->tournament->getStartDatetimeFirstday();
+        $i = 0;
+        foreach ($matches as $match) {
+            $matchEntity = new Match();
+            if (count($match) == 3) { // reference game
+                $matchEntity->setHostReference($match[0]);
+                $matchEntity->setAwayReference($match[1]);
+                $matchEntity->setName($match[2]);
+            }else {
+                $matchEntity->setHost($match[0]);
+                $matchEntity->setAway($match[1]);
+            }
+            $matchEntity->setTime($previousGameTime);
+            $matchEntity->setTournament($this->tournament);
+            $this->entityManager->persist($matchEntity);
+            array_push($matchsEntities, $matchEntity);
+            $previousGameTime->add(new DateInterval("PT" . $this->tournament->getGameTime() . "M"));
+            if ($this->tournament->getEndDatetimeFirstday() != null) {
+                if ($previousGameTime->format('Hi') > $this->tournament->getEndDatetimeFirstday()->format('Hi')) {
+                    $previousGameTime->setTime(
+                        intval($this->tournament->getStartDatetimeSecondDay()->format('H')),
+                        intval($this->tournament->getStartDatetimeSecondDay()->format('i'))
+                    );
+                    date_add($previousGameTime, date_interval_create_from_date_string('1 days'));
+                }
+            }
+            if ($i % $this->tournament->getIceRefectionFrequence() == 0 and $i != 0) {
+                $previousGameTime->add(new DateInterval("PT20M")); //Mounir
+            }
+            $i++;
+        }
+        if ($this->tournament->getState() < Tournament::STATE_GAME_GENERATED) {
+            $this->tournament->setState(Tournament::STATE_GAME_GENERATED);
+        }
+        $this->entityManager->flush();
+
+        return $matchsEntities;
+    }
+
+    /**
+     * @return array
+     * Generates all ranking matchs with game references
+     * Comments will suppose that there is 5 teams per pool (A and B)
+     */
+    private function generateRankingReferenceMatchs() { // TODO: More than 2 Pools and 5 teams per pool
+        $matchs = array();
+        if (count($this->tournament->getPools()) == 2) {
+            if (count($this->tournament->getTeams()) == 10){ // When 5 teams per pool
+                $matchs[] = array( // 2nd A vs 3rd B
+                    "2nd : Pool " . $this->tournament->getPools()[0]->getName(),
+                    "3rd : Pool " . $this->tournament->getPools()[1]->getName(),
+                    "PO1"
+                );
+
+                $matchs[] = array( // 2nd B vs 3rd A
+                    "2nd : Pool " . $this->tournament->getPools()[1]->getName(),
+                    "3rd : Pool " . $this->tournament->getPools()[0]->getName(),
+                    "PO2"
+                );
+
+                $matchs[] = array( // 4th A vs 5th B
+                    "4th : Pool " . $this->tournament->getPools()[0]->getName(),
+                    "5th : Pool " . $this->tournament->getPools()[1]->getName(),
+                    "PO3"
+                );
+
+                $matchs[] = array( // 4th B vs 5th A
+                    "4th : Pool " . $this->tournament->getPools()[1]->getName(),
+                    "5th : Pool " . $this->tournament->getPools()[0]->getName(),
+                    "PO4"
+                );
+
+                $matchs[] = array( // 1st B vs PO1 : Semi-Final
+                    "1st : Pool " . $this->tournament->getPools()[1]->getName(),
+                    "Winner PO1",
+                    "PO5"
+                );
+
+                $matchs[] = array( // 1st A vs PO2 : Semi-Final
+                    "1st : Pool " . $this->tournament->getPools()[0]->getName(),
+                    "Winner PO2",
+                    "PO6"
+                );
+
+                $matchs[] = array( // Winner PO3 vs Winner PO4
+                    "Winner P03",
+                    "Winner PO4",
+                    "7-8"
+                );
+
+                $matchs[] = array( // Looser PO3 vs Looser PO4
+                    "Looser P03",
+                    "Looser PO6",
+                    "9-10"
+                );
+
+                $matchs[] = array( // Looser PO1 vs Looser PO2
+                    "Looser P01",
+                    "Looser PO2",
+                    "5-6"
+                );
+
+                $matchs[] = array( // Looser PO5 vs Looser PO6 : Little Final
+                    "Looser P05",
+                    "Looser PO6",
+                    "3-4"
+                );
+
+                $matchs[] = array( // Winner P05 vs Winner PO6 : Final
+                    "Winner P05",
+                    "Winner PO6",
+                    "1-2"
+                );
+            }
+
+        }
+        return $matchs;
+    }
+
+    /**
+     * @return array
+     */
+    private function generatePoolMatchs(): array {
         $matchs = array();
         foreach ($this->tournament->getPools() as $pool) {
             $poolMatchs = array();
@@ -113,39 +243,7 @@ class MatchGenerator {
                 }, $matchs[0], $matchs[1], $matchs[2], $matchs[3]);
                 break;
         }
-
-
-        $matchsEntities = array();
-        $previousGameTime = $this->tournament->getStartDatetimeFirstday();
-
-        foreach ($sortedMatches as $match) {
-            $matchEntity = new Match();
-            $matchEntity->setHost($match[0]);
-            $matchEntity->setAway($match[1]);
-            $matchEntity->setTime($previousGameTime);
-            $matchEntity->setTournament($this->tournament);
-            $this->entityManager->persist($matchEntity);
-            array_push($matchsEntities, $matchEntity);
-            $previousGameTime->add(new DateInterval("PT" . $this->tournament->getGameTime() . "M"));
-            if ($this->tournament->getEndDatetimeFirstday() != null) {
-                if ($previousGameTime->format('Hi') > $this->tournament->getEndDatetimeFirstday()->format('Hi')) {
-                    $previousGameTime->setTime(
-                        intval($this->tournament->getStartDatetimeSecondDay()->format('H')),
-                        intval($this->tournament->getStartDatetimeSecondDay()->format('i'))
-                    );
-                    date_add($previousGameTime, date_interval_create_from_date_string('1 days'));
-                }
-            }
-            if ($i % $this->tournament->getIceRefectionFrequence() == 0 and $i != 0)
-                $previousGameTime->add(new DateInterval("PT20M")); //Mounir
-
-        }
-        if ($this->tournament->getState() < Tournament::STATE_GAME_GENERATED){
-            $this->tournament->setState(Tournament::STATE_GAME_GENERATED);
-        }
-        $this->entityManager->flush();
-
-        return $matchsEntities;
+        return $sortedMatches;
     }
 
 }

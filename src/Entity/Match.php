@@ -42,6 +42,18 @@ class Match {
     protected $away;
 
     /**
+     * @var string
+     * @Column(type="string", nullable=true)
+     */
+    protected $host_reference;
+
+    /**
+     * @var string
+     * @Column(type="string", nullable=true)
+     */
+    protected $away_reference;
+
+    /**
      * @Column(type="integer",)
      * @var int
      */
@@ -70,6 +82,12 @@ class Match {
      * @Column(type="integer")
      */
     protected $state = 0;
+
+    /**
+     * @var string
+     * @Column(type="string", nullable=true)
+     */
+    protected $name;
 
     /**
      * @var Tournament
@@ -113,9 +131,9 @@ class Match {
     }
 
     /**
-     * @return Team
+     * @return Team| null
      */
-    public function getHost(): Team {
+    public function getHost() {
         return $this->host;
     }
 
@@ -129,9 +147,9 @@ class Match {
     }
 
     /**
-     * @return Team
+     * @return Team| null
      */
-    public function getAway(): Team {
+    public function getAway() {
         return $this->away;
     }
 
@@ -141,6 +159,38 @@ class Match {
      */
     public function setAway(Team $away): Match {
         $this->away = $away;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getHostReference() {
+        return $this->host_reference;
+    }
+
+    /**
+     * @param string $host_reference
+     * @return Match
+     */
+    public function setHostReference(string $host_reference): Match {
+        $this->host_reference = $host_reference;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAwayReference() {
+        return $this->away_reference;
+    }
+
+    /**
+     * @param string $away_reference
+     * @return Match
+     */
+    public function setAwayReference(string $away_reference): Match {
+        $this->away_reference = $away_reference;
         return $this;
     }
 
@@ -215,7 +265,6 @@ class Match {
     }
 
 
-
     /**
      * @param string $type
      * @return Match
@@ -259,6 +308,22 @@ class Match {
      */
     public function setState(int $state): Match {
         $this->state = $state;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getName() {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     * @return Match
+     */
+    public function setName(string $name): Match {
+        $this->name = $name;
         return $this;
     }
 
