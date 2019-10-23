@@ -47,6 +47,7 @@ class MatchGenerator {
                 $matchEntity->setHostReference($match[0]);
                 $matchEntity->setAwayReference($match[1]);
                 $matchEntity->setName($match[2]);
+                $matchEntity->setType(Match::TYPE_RANKING);
             }else {
                 $matchEntity->setHost($match[0]);
                 $matchEntity->setAway($match[1]);

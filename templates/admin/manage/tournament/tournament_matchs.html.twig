@@ -2,9 +2,13 @@
     {% if tournament.isState(0) and tournament.teams|length == 0 %}
         <a class="btn green disabled" href="#">Aucune équipe</a>
     {% elseif tournament.isState(1) or tournament.matchs|length == 0 %}
-        <a class="btn green" href="{{ path('admin_match_generate', {'id': tournament.id}) }}">Générer les matchs</a>
+        <a class="btn green" href="{{ path('admin_match_generate', {'id': tournament.id}) }}">Générer tous les
+            matchs</a>
+    {% elseif tournament.isState(2) %}
+        <a class="btn green" href="{{ path('admin_match_generate', {'id': tournament.id}) }}">Regénérer tous les
+            matchs</a>
     {% else %}
-        <a class="btn green" href="{{ path('admin_team_new', {'id': tournament.id}) }}">Regénérer les matchs</a>
+        <a class="btn green disabled" href="#">TODO</a>
     {% endif %}
 </div>
 <table class="striped highlight centered responsive-table">
@@ -23,18 +27,95 @@
     </thead>
     <tbody>
     {% for match in tournament.matchs %}
-        <tr>
+        <tr id="match-{{ match.id }}">
             <td>{{ match.id }}</td>
-            <td>{{ (match.host ? match.host.name : match.hostreference) }}</td>
-            <td>{{ (match.away ? match.away.name : match.awayreference) }}</td>
-            <td>{{ match.time|date("H:i") }}</td>
-            <td>{{ match.typename }}</td>
+            <td {{ (match.host ? "team-id=" ~ match.host.id ~ "") }}>{{ (match.host ? match.host.name : match.hostreference) }}</td>
+            <td {{ (match.away ? "team-id=" ~ match.away.id ~ "") }}>{{ (match.away ? match.away.name : match.awayreference) }}</td>
+            <td>{{ match.time|date("d/m/Y H:i") }}</td>
+            <td match-type="{{ match.type }}">{{ match.typename }}</td>
             <td>{{ (match.name ? match.name) }}</td>
             <td>{{ match.hostscore }} : {{ match.awayscore }}</td>
-            <td>{{ match.stateName }}</td>
-            <td><a href="{{ path('admin_tournament_edit', {'id': tournament.id}) }}"><i class="fa fa-edit green-text"></i></a></td>
+            <td match-state="{{ match.state }}">{{ match.stateName }}</td>
+            <td>
+                <a href="#matchModal" form-link="{{ path("ajax_admin_match_edit", {'id': tournament.id}) }}" class="modal-trigger matchEditModal">
+                    <i class="fa fa-edit green-text"></i>
+                </a>
+            </td>
         </tr>
     {% endfor %}
     </tbody>
-
 </table>
+<div id="matchModal" class="modal">
+    <div class="modal-content">
+        <h4>Edition de match</h4>
+        <form action="" id="matchEditForm" method="POST">
+            <div class="row">
+                <div class="input-field col m3 s12">
+                    <select required id="host-team" name="host-team">
+                        {% for team in tournament.teams %}
+                            <option value="{{ team.id }}">{{ team.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="host-team">Equipe Domicile</label>
+                </div>
+                <div class="input-field col m3 s12">
+                    <input required id="host-score" value="0"
+                           name="host-score" type="number"
+                           class="validate">
+                    <label for="host-score">Score Domicile</label>
+                </div>
+                <div class="input-field col m3 s12">
+                    <input required id="away-score" value="0"
+                           name="away-score" type="number"
+                           class="validate">
+                    <label for="away-score">Score Visiteur</label>
+                </div>
+                <div class="input-field col m3 s12">
+                    <select required id="away-team" name="away-team">
+                        {% for team in tournament.teams %}
+                            <option value="{{ team.id }}">{{ team.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="away-team">Equipe Domicile</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col m3 s12">
+                    <input required type="text" id="match-time" name="match-time"
+                           value="{{ tournament.startdatetimefirstday|date("H:i") }}" class="timepicker">
+                    <label for="match-time">Heure du match</label>
+                </div>
+                <div class="input-field col m3 s12">
+                    <input required type="text" id="match-day" name="match-day"
+                           value="{{ tournament.startdatetimefirstday|date("d/m/Y") }}" class="datepicker">
+                    <label for="match-day">Jour du match</label>
+                </div>
+                <div class="input-field col m3 s12">
+                    <select required id="match-state" name="match-state">
+                        <option value="0">Prévu</option>
+                        <option value="1">En Cours</option>
+                        <option value="2">Terminé</option>
+                    </select>
+                    <label for="match-state">Etat du match</label>
+                </div>
+                <div class="input-field col m3 s12">
+                    <select required id="match-type" name="match-type">
+                        <option value="0">Match de Pool</option>
+                        <option value="1">Match de Classement</option>
+                    </select>
+                    <label for="match-type">Type de match</label>
+                </div>
+
+            </div>
+            <input type="hidden" name="match-id" id="match-id">
+            <div class="row">
+                <div class="col s4 push-s4">
+                    <button class="btn waves-effect waves-light center" type="submit" name="action">Mettre à jour
+                        <i class="fa fa-upload"></i>
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

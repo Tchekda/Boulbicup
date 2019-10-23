@@ -11,8 +11,6 @@
         });
         $('.materialboxed').materialbox();
 
-        M.updateTextFields();
-
         $('.datepicker').datepicker({
             firstDay: 1,
             format: 'dd/mm/yyyy'
@@ -29,5 +27,6 @@
 
         $('select').formSelect();
 
+        M.updateTextFields();
     }); // end of document ready
 })(jQuery); // end of jQuery name space

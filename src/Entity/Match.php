@@ -72,8 +72,8 @@ class Match {
     protected $time;
 
     /**
-     * @var string
-     * @Column(type="string")
+     * @var int
+     * @Column(type="integer")
      */
     protected $type = 0;
 
@@ -243,9 +243,9 @@ class Match {
     }
 
     /**
-     * @return string
+     * @return integer
      */
-    public function getType(): string {
+    public function getType(): int {
         return $this->type;
     }
 
@@ -266,10 +266,10 @@ class Match {
 
 
     /**
-     * @param string $type
+     * @param int $type
      * @return Match
      */
-    public function setType(string $type): Match {
+    public function setType(int $type): Match {
         $this->type = $type;
         return $this;
     }

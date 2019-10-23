@@ -44,6 +44,7 @@ class BaseController {
         });
         $this->twig->addFunction($path_function);
 
+
         $this->twig->addExtension(new \Twig_Extensions_Extension_Intl());
 
         $this->entityManager = $entityManager;

@@ -44,6 +44,7 @@ try {
         array('POST', '/ajax/admin/pool/delete/[i:id]', array(TeamController::class, 'ajaxPoolDelete'), 'ajax_admin_pool_delete'),
         array('GET', '/admin/users', array(AdminController::class, 'userList'), 'admin_user_list'),
         array('GET', '/admin/matchs/generate/[i:id]', array(MatchController::class, 'generateMatchs'), 'admin_match_generate'),
+        array('POST', '/ajax/admin/matchs/edit/[i:id]', array(MatchController::class, 'ajaxMatchEdit'), 'ajax_admin_match_edit'),
     ));
 } catch (Exception $e) {
     die("Can't register routes : " . $e->getMessage());
