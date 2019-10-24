@@ -100,6 +100,14 @@ class Team
     /**
      * @param mixed $points
      */
+    public function addPoints($points): void
+    {
+        $this->points += $points;
+    }
+
+    /**
+     * @param mixed $points
+     */
     public function setPoints($points): void
     {
         $this->points = $points;

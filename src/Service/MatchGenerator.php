@@ -34,7 +34,7 @@ class MatchGenerator {
     public function generateTournamentMatchs() {
         $matches = $this->generatePoolMatchs();
 
-        foreach ($this->generateRankingReferenceMatchs() as $match){
+        foreach ($this->generateRankingReferenceMatchs() as $match) {
             $matches[] = $match;
         }
 
@@ -48,7 +48,7 @@ class MatchGenerator {
                 $matchEntity->setAwayReference($match[1]);
                 $matchEntity->setName($match[2]);
                 $matchEntity->setType(Match::TYPE_RANKING);
-            }else {
+            } else {
                 $matchEntity->setHost($match[0]);
                 $matchEntity->setAway($match[1]);
             }
@@ -58,13 +58,13 @@ class MatchGenerator {
             array_push($matchsEntities, $matchEntity);
             $previousGameTime->add(
                 new DateInterval("PT" . (
-                    $this->tournament->getWarmupTime() +
-                    $this->tournament->getGameTime() +
-                    $this->tournament->getPostgameTime()
+                        $this->tournament->getWarmupTime() +
+                        $this->tournament->getGameTime() +
+                        $this->tournament->getPostgameTime()
                     )
                     . "M")
             );
-            if ($this->tournament->getEndDatetimeFirstday()  != null) {
+            if ($this->tournament->getEndDatetimeFirstday() != null) {
                 if ($previousGameTime > $this->tournament->getEndDatetimeFirstday() and $previousGameTime < $this->tournament->getStartDatetimeSecondDay()) {
                     $previousGameTime->setTime(
                         intval($this->tournament->getStartDatetimeSecondDay()->format('H')),
@@ -96,7 +96,7 @@ class MatchGenerator {
     private function generateRankingReferenceMatchs() { // TODO: More than 2 Pools and 5 teams per pool
         $matchs = array();
         if (count($this->tournament->getPools()) == 2) {
-            if (count($this->tournament->getTeams()) == 10){ // When 5 teams per pool
+            if (count($this->tournament->getTeams()) == 10) { // When 5 teams per pool
                 $matchs[] = array( // 2nd A vs 3rd B
                     "2nd : Pool " . $this->tournament->getPools()[0]->getName(),
                     "3rd : Pool " . $this->tournament->getPools()[1]->getName(),
@@ -254,6 +254,19 @@ class MatchGenerator {
                 break;
         }
         return $sortedMatches;
+    }
+
+    /**
+     * @return bool
+     * Checks if all Pool games are finished to init the ranking phase
+     */
+    public function allPoolGamesFinished(): bool {
+        foreach ($this->tournament->getMatchs() as $match){
+            if ($match->getType() == Match::TYPE_POOL and $match->getState() != Match::STATE_FINISHED){
+                return false;
+            }
+        }
+        return true;
     }
 
 }

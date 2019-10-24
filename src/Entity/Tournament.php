@@ -114,14 +114,16 @@ class Tournament {
     const STATE_TEAM_FILLED = 1;
     const STATE_GAME_GENERATED = 2;
     const STATE_POOL_PHASE = 3;
-    const STATE_RANKING_PHASE = 4;
-    const STATE_FINISHED = 5;
+    const STATE_PRE_RANKING_PHASE = 4;
+    const STATE_RANKING_PHASE = 5;
+    const STATE_FINISHED = 6;
 
     protected $states = [
         Tournament::STATE_CREATED => "Tournoi créé",
         Tournament::STATE_TEAM_FILLED => "Equipes enregistrées",
         Tournament::STATE_GAME_GENERATED => "Matchs générés",
         Tournament::STATE_POOL_PHASE => "Phase de Pool",
+        Tournament::STATE_PRE_RANKING_PHASE => "Préparation à la phase de Classement",
         Tournament::STATE_RANKING_PHASE => "Phase de Classement",
         Tournament::STATE_FINISHED => "Tournoi terminé"
     ];

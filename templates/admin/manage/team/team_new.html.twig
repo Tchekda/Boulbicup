@@ -203,28 +203,18 @@
                     parent = $(this).parent().parent();
                 if (typeof poolID !== typeof undefined && poolID !== false) {
                     $.ajax({
-                        url : $(this).attr('href'),
-                        type : 'POST',
+                        url: $(this).attr('href'),
+                        type: 'POST',
                         dataType: 'json',
                         data: {
                             'pool_id': poolID,
                         },
-                        success : function(data, statut){
-                            if (data.error !== false){
-                                M.toast({html: 'Impossible de supprimer la pool', classes: "red"});
-                                console.log(data)
-                            }else {
-                                M.toast({html: 'La pool a bien été supprimée', classes: "green"});
-                                parent.remove();
-                            }
-
-                        },
-
-                        error : function(data, statut, erreur){
-
+                        success: function (data, statut) {
+                            M.toast({html: 'La pool a bien été supprimée', classes: "green"});
+                            parent.remove();
                         }
                     });
-                }else {
+                } else {
                     parent.remove();
                 }
                 $('.pool').each(function (i) {
@@ -243,8 +233,8 @@
                     teamHTML = $("#pool_POOLID_team_TEAMID").get(0).outerHTML;
 
                 var i;
-                for (i=0; i<100; i++){
-                    if ($("#pool_" + poolID + "_team_" + i).length === 0){
+                for (i = 0; i < 100; i++) {
+                    if ($("#pool_" + poolID + "_team_" + i).length === 0) {
                         teamID = i;
                         break;
                     }
@@ -264,24 +254,24 @@
 
                 if (typeof poolID !== typeof undefined && poolID !== false) {
                     $.ajax({
-                        url : $(this).attr('href'),
-                        type : 'POST',
+                        url: $(this).attr('href'),
+                        type: 'POST',
                         dataType: 'json',
                         data: {
                             'pool_id': poolID,
                             'team_id': $(this).attr('teamID'),
                         },
-                        success : function(data, statut){
+                        success: function (data, statut) {
                             M.toast({html: 'L\'équipe a bien été supprimé', classes: "green"});
                             parent.remove();
                         },
 
-                        error : function(data, statut, erreur){
+                        error: function (data, statut, erreur) {
                             M.toast({html: 'Impossible de supprimer l\'équipe', classes: "red"});
                             console.log(data)
                         }
                     });
-                }else {
+                } else {
                     parent.remove();
                 }
 

@@ -186,7 +186,6 @@ class TeamController extends BaseController
     {
         $tournament = $this->findTournamentByID($id); // Try to find the tournament by the given id, If not found : redirected to tournaments list
 
-        $error = false;
         preg_match('/(\d+)/', $_POST['pool_id'], $matches);
         $poolID = $matches[1];
 
@@ -196,12 +195,10 @@ class TeamController extends BaseController
             }
             $this->entityManager->remove($pool);
             $this->entityManager->flush();
-        }else {
-            $error = true;
         }
 
         $data = [
-            'error' => $error,
+            'Done'
         ];
 
         header('Content-Type: application/json');

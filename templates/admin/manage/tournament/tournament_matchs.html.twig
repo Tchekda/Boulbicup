@@ -5,8 +5,16 @@
         <a class="btn green" href="{{ path('admin_match_generate', {'id': tournament.id}) }}">Générer tous les
             matchs</a>
     {% elseif tournament.isState(2) %}
+        <p>Rafraichissez la page pour voir les points et générer les prochains matchs</p>
         <a class="btn green" href="{{ path('admin_match_generate', {'id': tournament.id}) }}">Regénérer tous les
             matchs</a>
+    {% elseif tournament.isState(3) %}
+        <p>Rafraichissez la page pour voir les points et générer les prochains matchs</p>
+        <a class="btn green disabled" href="#">IL reste des matchs de Pool à jouer</a>
+    {% elseif tournament.isState(4) %}
+        <p>Vérifier les scores, il ne vous sera plus possible de les modifier ensuite, les points seront recalculés lors
+            de la génération des matchs de classement comme vérification</p>
+        <a class="btn green" href="#">Générer les matchs de classement</a>
     {% else %}
         <a class="btn green disabled" href="#">TODO</a>
     {% endif %}
@@ -37,7 +45,8 @@
             <td>{{ match.hostscore }} : {{ match.awayscore }}</td>
             <td match-state="{{ match.state }}">{{ match.stateName }}</td>
             <td>
-                <a href="#matchModal" form-link="{{ path("ajax_admin_match_edit", {'id': tournament.id}) }}" class="modal-trigger matchEditModal">
+                <a href="#matchModal" form-link="{{ path("ajax_admin_pool_match_edit", {'id': tournament.id}) }}"
+                   class="modal-trigger matchEditModal">
                     <i class="fa fa-edit green-text"></i>
                 </a>
             </td>
