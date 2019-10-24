@@ -43,7 +43,7 @@ try {
         array('POST', '/ajax/admin/team/delete/[i:id]', array(TeamController::class, 'ajaxTeamDelete'), 'ajax_admin_team_delete'),
         array('POST', '/ajax/admin/pool/delete/[i:id]', array(TeamController::class, 'ajaxPoolDelete'), 'ajax_admin_pool_delete'),
         array('GET', '/admin/users', array(AdminController::class, 'userList'), 'admin_user_list'),
-        array('GET', '/admin/matchs/generate/[i:id]', array(MatchController::class, 'generateMatchs'), 'admin_match_generate'),
+        array('GET', '/admin/matchs/pool/generate/[i:id]', array(MatchController::class, 'generatePoolMatchs'), 'admin_pool_match_generate'),
         array('POST', '/ajax/admin/matchs/pool/edit/[i:id]', array(MatchController::class, 'ajaxPoolMatchEdit'), 'ajax_admin_pool_match_edit'),
     ));
 } catch (Exception $e) {

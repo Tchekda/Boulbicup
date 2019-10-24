@@ -98,68 +98,68 @@ class MatchGenerator {
         if (count($this->tournament->getPools()) == 2) {
             if (count($this->tournament->getTeams()) == 10) { // When 5 teams per pool
                 $matchs[] = array( // 2nd A vs 3rd B
-                    "2nd : Pool " . $this->tournament->getPools()[0]->getName(),
-                    "3rd : Pool " . $this->tournament->getPools()[1]->getName(),
+                    "2:" . $this->tournament->getPools()[0]->getId(),
+                    "3:" . $this->tournament->getPools()[1]->getId(),
                     "PO1"
                 );
 
                 $matchs[] = array( // 2nd B vs 3rd A
-                    "2nd : Pool " . $this->tournament->getPools()[1]->getName(),
-                    "3rd : Pool " . $this->tournament->getPools()[0]->getName(),
+                    "2:" . $this->tournament->getPools()[1]->getId(),
+                    "3:" . $this->tournament->getPools()[0]->getId(),
                     "PO2"
                 );
 
                 $matchs[] = array( // 4th A vs 5th B
-                    "4th : Pool " . $this->tournament->getPools()[0]->getName(),
-                    "5th : Pool " . $this->tournament->getPools()[1]->getName(),
+                    "4:" . $this->tournament->getPools()[0]->getId(),
+                    "5:" . $this->tournament->getPools()[1]->getId(),
                     "PO3"
                 );
 
                 $matchs[] = array( // 4th B vs 5th A
-                    "4th : Pool " . $this->tournament->getPools()[1]->getName(),
-                    "5th : Pool " . $this->tournament->getPools()[0]->getName(),
+                    "4:" . $this->tournament->getPools()[1]->getId(),
+                    "5:" . $this->tournament->getPools()[0]->getId(),
                     "PO4"
                 );
 
                 $matchs[] = array( // 1st B vs PO1 : Semi-Final
-                    "1st : Pool " . $this->tournament->getPools()[1]->getName(),
-                    "Winner PO1",
+                    "1:" . $this->tournament->getPools()[1]->getId(),
+                    "V(PO1)",
                     "PO5"
                 );
 
                 $matchs[] = array( // 1st A vs PO2 : Semi-Final
-                    "1st : Pool " . $this->tournament->getPools()[0]->getName(),
-                    "Winner PO2",
+                    "1:" . $this->tournament->getPools()[0]->getId(),
+                    "V(PO2)",
                     "PO6"
                 );
 
                 $matchs[] = array( // Winner PO3 vs Winner PO4
-                    "Winner P03",
-                    "Winner PO4",
+                    "V(P03)",
+                    "V(PO4)",
                     "7-8"
                 );
 
                 $matchs[] = array( // Looser PO3 vs Looser PO4
-                    "Looser P03",
-                    "Looser PO6",
+                    "L(P03)",
+                    "L(PO6)",
                     "9-10"
                 );
 
                 $matchs[] = array( // Looser PO1 vs Looser PO2
-                    "Looser P01",
-                    "Looser PO2",
+                    "L(P01)",
+                    "L(PO2)",
                     "5-6"
                 );
 
                 $matchs[] = array( // Looser PO5 vs Looser PO6 : Little Final
-                    "Looser P05",
-                    "Looser PO6",
+                    "L(P05)",
+                    "L(PO6)",
                     "3-4"
                 );
 
                 $matchs[] = array( // Winner P05 vs Winner PO6 : Final
-                    "Winner P05",
-                    "Winner PO6",
+                    "V(P05)",
+                    "V(PO6)",
                     "1-2"
                 );
             }
@@ -269,4 +269,8 @@ class MatchGenerator {
         return true;
     }
 
+
+    public function generateRankingMatchs(): array {
+
+    }
 }

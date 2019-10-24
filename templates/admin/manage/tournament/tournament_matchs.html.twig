@@ -2,11 +2,11 @@
     {% if tournament.isState(0) and tournament.teams|length == 0 %}
         <a class="btn green disabled" href="#">Aucune équipe</a>
     {% elseif tournament.isState(1) or tournament.matchs|length == 0 %}
-        <a class="btn green" href="{{ path('admin_match_generate', {'id': tournament.id}) }}">Générer tous les
+        <a class="btn green" href="{{ path('admin_pool_match_generate', {'id': tournament.id}) }}">Générer tous les
             matchs</a>
     {% elseif tournament.isState(2) %}
         <p>Rafraichissez la page pour voir les points et générer les prochains matchs</p>
-        <a class="btn green" href="{{ path('admin_match_generate', {'id': tournament.id}) }}">Regénérer tous les
+        <a class="btn green" href="{{ path('admin_pool_match_generate', {'id': tournament.id}) }}">Regénérer tous les
             matchs</a>
     {% elseif tournament.isState(3) %}
         <p>Rafraichissez la page pour voir les points et générer les prochains matchs</p>
@@ -45,16 +45,18 @@
             <td>{{ match.hostscore }} : {{ match.awayscore }}</td>
             <td match-state="{{ match.state }}">{{ match.stateName }}</td>
             <td>
-                <a href="#matchModal" form-link="{{ path("ajax_admin_pool_match_edit", {'id': tournament.id}) }}"
+                {% if tournament.state <= 4 and match.type == 0 %}
+                <a href="#poolMatchModal" form-link="{{ path("ajax_admin_pool_match_edit", {'id': tournament.id}) }}"
                    class="modal-trigger matchEditModal">
                     <i class="fa fa-edit green-text"></i>
                 </a>
+                {% endif %}
             </td>
         </tr>
     {% endfor %}
     </tbody>
 </table>
-<div id="matchModal" class="modal">
+<div id="poolMatchModal" class="modal">
     <div class="modal-content">
         <h4>Edition de match</h4>
         <form action="" id="matchEditForm" method="POST">
