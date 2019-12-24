@@ -134,6 +134,10 @@ class Tournament {
         $this->pools = new ArrayCollection();
     }
 
+    public function toArray() {
+        return get_object_vars($this);
+    }
+
     /**
      * @return int
      */

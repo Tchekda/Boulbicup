@@ -5,6 +5,7 @@ namespace Controller;
 
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Entity\Team;
 use Entity\Tournament;
 use Service\App;
 
@@ -125,8 +126,23 @@ class TournamentController extends BaseController {
      */
     public function tournamentEdit(string $id) {
         $tournament = $this->findTournamentByID($id); // Try to find the tournament by the given id, If not found : redirected to tournaments list
+        $ranked_teams = ['all' => $tournament->getTeams()->getValues()];
 
-        echo $this->twig->render('admin/manage/tournament/tournament_edit.html.twig', ['tournament' => $tournament]);
+        usort($ranked_teams['all'], function ($a, $b) {
+            return $a->getPoints() < $b->getPoints();
+        });
+
+        foreach ($tournament->getPools() as $pool) {
+            $ranked_teams[$pool->getName()] = $pool->getTeams()->getValues();
+            usort($ranked_teams[$pool->getName()], function ($a, $b) {
+                return $a->getPoints() < $b->getPoints();
+            });
+        }
+
+
+        echo $this->twig->render('admin/manage/tournament/tournament_edit.html.twig',
+            ['tournament' => $tournament, 'ranked_teams' => $ranked_teams]
+        );
     }
 
 
@@ -170,5 +186,7 @@ class TournamentController extends BaseController {
         echo json_encode($data);
 
     }
+
+
 
 }

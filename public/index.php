@@ -45,6 +45,7 @@ try {
         array('GET', '/admin/users', array(AdminController::class, 'userList'), 'admin_user_list'),
         array('GET', '/admin/matchs/pool/generate/[i:id]', array(MatchController::class, 'generatePoolMatchs'), 'admin_pool_match_generate'),
         array('POST', '/ajax/admin/matchs/pool/edit/[i:id]', array(MatchController::class, 'ajaxPoolMatchEdit'), 'ajax_admin_pool_match_edit'),
+        array('POST', '/ajax/admin/matchs/recalculate/[i:id]', array(MatchController::class, 'ajaxRecalcutatePoints'), 'ajax_admin_match_recalculate'),
     ));
 } catch (Exception $e) {
     die("Can't register routes : " . $e->getMessage());

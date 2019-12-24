@@ -12,8 +12,7 @@
         <p>Rafraichissez la page pour voir les points et générer les prochains matchs</p>
         <a class="btn green disabled" href="#">IL reste des matchs de Pool à jouer</a>
     {% elseif tournament.isState(4) %}
-        <p>Vérifier les scores, il ne vous sera plus possible de les modifier ensuite, les points seront recalculés lors
-            de la génération des matchs de classement comme vérification</p>
+        <p>Vérifier les scores, il ne vous sera plus possible de les modifier ensuite! Puis recalculez sur la page "Equipes"</p>
         <a class="btn green" href="#">Générer les matchs de classement</a>
     {% else %}
         <a class="btn green disabled" href="#">TODO</a>

@@ -1,26 +1,52 @@
 <div class="center">
     <a class="btn green" href="{{ path('admin_team_new', {'id': tournament.id}) }}">Rajouter une/des équipe(s)</a>
 </div>
-<table class="striped highlight centered responsive-table">
+{% for pool,teams in ranked_teams if pool != "all" %}
+    <div class="col l{{ 12/(tournament.pools|length) }} s12">
+        <h3 class="center">{{ pool }}</h3>
+        <table class="striped highlight centered responsive-table rankings" id="rankingPool-{{ pool }}">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Points</th>
+                <th>Classement</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for team in teams %}
+                <tr id="team_pool_{{ team.id }}">
+                    <td>{{ team.id }}</td>
+                    <td>{{ team.name }}</td>
+                    <td>{{ team.points }}</td>
+                    <td>{{ loop.index }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endfor %}
+<h3 class="center">Classement Général</h3>
+<div class="center">
+    <a class="btn green" id="recalculateLink" href="{{ path('ajax_admin_match_recalculate', {'id': tournament.id}) }}">Recalculer les points</a>
+</div>
+<table class="striped highlight centered responsive-table rankings" id="globalRanking">
     <thead>
     <tr>
-        <th>ID</th>
+        <th>Position</th>
         <th>Nom</th>
         <th>Points</th>
         <th>Pool</th>
-        <th>Editer</th>
     </tr>
     </thead>
     <tbody>
-    {% for team in tournament.teams %}
-        <tr>
-            <td>{{ team.id }}</td>
+    {% for team in ranked_teams.all %}
+        <tr id="team_global_{{ team.id }}">
+            <td>{{ loop.index }}</td>
             <td>{{ team.name }}</td>
             <td>{{ team.points }}</td>
             <td>{{ team.pool.name }}</td>
-            <td><a href="{{ path('admin_tournament_edit', {'id': tournament.id}) }}"><i class="fa fa-edit green-text"></i></a></td>
         </tr>
     {% endfor %}
     </tbody>
-
 </table>

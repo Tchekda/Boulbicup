@@ -145,6 +145,56 @@ class MatchController extends BaseController {
 
     }
 
+
+    public function ajaxRecalcutatePoints(string $id){
+        $tournament = $this->findTournamentByID($id); // Try to find the tournament by the given id, If not found : redirected to tournaments list
+
+        foreach ($tournament->getTeams() as $team) {
+            $team->setPoints(0);
+        }
+
+        foreach ($tournament->getMatchs() as $match) {
+            if ($match->getState() == Match::STATE_FINISHED) {
+                if ($match->getHostScore() > $match->getAwayScore()) {
+                    $match->getHost()->addPoints(3);
+                    $match->getAway()->addPoints(1);
+                } elseif ($match->getHostScore() < $match->getAwayScore()) {
+                    $match->getHost()->addPoints(1);
+                    $match->getAway()->addPoints(3);
+                } else {
+                    $match->getHost()->addPoints(2);
+                    $match->getAway()->addPoints(2);
+                }
+            }
+        }
+
+        $this->entityManager->flush();
+
+        $ranked_teams = ['all' => array()];
+
+        foreach ($tournament->getPools() as $pool) {
+            $ranked_teams[$pool->getName()] = array();
+        }
+
+        foreach ($tournament->getTeams() as $team){
+            $ranked_teams['all'][] = $team->toArray();
+            $ranked_teams[$team->getPool()->getName()][] = $team->toArray();
+        }
+
+        usort($ranked_teams['all'], function ($a, $b) {
+            return $a['points'] < $b['points'];
+        });
+
+        foreach ($tournament->getPools() as $pool) {
+            usort($ranked_teams[$pool->getName()], function ($a, $b) {
+                return $a['points'] < $b['points'];
+            });
+        }
+
+        header('HTTP/1.0 200 OK');
+        header('Content-Type: application/json');
+        echo json_encode($ranked_teams);
+    }
     /**
      * @param string $id
      * Replace Team references by real teams

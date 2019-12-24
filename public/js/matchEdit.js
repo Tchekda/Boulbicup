@@ -43,5 +43,48 @@
             }
         };
         $('#matchEditForm').ajaxForm(options);
+
+
+        $('#recalculateLink').click(function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: $(this).attr('href'),
+                method: 'POST',
+                success: function(response) {
+                    M.toast({html: 'Les points ont été recalculés', classes: "green"});
+                    $('.rankings tbody').empty();
+                    for ($ct in response['all']){
+                        let $team = response['all'][$ct];
+                        $("#globalRanking tbody").append("<tr id='team_global_" + $team['id'] + "'>"
+                             + "<td>" + (parseInt($ct) + 1) + "</td>"
+                             + "<td>" + $team['name'] + "</td>"
+                             + "<td>" + $team['points'] + "</td>"
+                             + "</tr>" );
+                    }
+
+                    for ($pool in response){
+                        if ($pool !== "all"){
+                            for ($ct in response[$pool]){
+                                let $team = response[$pool][$ct];
+                                $("#rankingPool-" + $pool + " tbody").append("<tr>"
+                                    + "<td>" + $team['id'] + "</td>"
+                                    + "<td>" + $team['name'] + "</td>"
+                                    + "<td>" + $team['points'] + "</td>"
+                                    + "<td>" + (parseInt($ct) + 1) + "</td>"
+                                    + "</tr>" );
+
+                                $("#team_global_" + $team['id']).append("<td>" + $pool + "</td>")
+                            }
+                        }
+                    }
+
+                },
+                error: function (response) {
+                    console.log(response);
+                    M.toast({html: 'Une erreur est survenue', classes: "red"});
+                }
+            });
+            return false; // for good measure
+        });
     }); // end of document ready
 })(jQuery); // end of jQuery name space

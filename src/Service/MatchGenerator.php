@@ -271,6 +271,8 @@ class MatchGenerator {
 
 
     public function generateRankingMatchs(): array {
+        foreach ($this->tournament->getMatchs() as $match) {
 
+        }
     }
 }
