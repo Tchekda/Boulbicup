@@ -55,10 +55,11 @@
                     $('.rankings tbody').empty();
                     for ($ct in response['all']){
                         let $team = response['all'][$ct];
-                        $("#globalRanking tbody").append("<tr id='team_global_" + $team['id'] + "'>"
+                        $("#globalRanking tbody").append("<tr>"
                              + "<td>" + (parseInt($ct) + 1) + "</td>"
                              + "<td>" + $team['name'] + "</td>"
                              + "<td>" + $team['points'] + "</td>"
+                             + "<td>" + $team['pool'] + "</td>"
                              + "</tr>" );
                     }
 
@@ -73,7 +74,6 @@
                                     + "<td>" + (parseInt($ct) + 1) + "</td>"
                                     + "</tr>" );
 
-                                $("#team_global_" + $team['id']).append("<td>" + $pool + "</td>")
                             }
                         }
                     }

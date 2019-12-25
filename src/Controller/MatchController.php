@@ -10,6 +10,7 @@ use Entity\User;
 use Service\App;
 use Service\MatchGenerator;
 use DateTime;
+use Service\Ranking;
 
 
 require '../vendor/autoload.php';
@@ -170,26 +171,10 @@ class MatchController extends BaseController {
 
         $this->entityManager->flush();
 
-        $ranked_teams = ['all' => array()];
+        $ranking = new Ranking($tournament);
 
-        foreach ($tournament->getPools() as $pool) {
-            $ranked_teams[$pool->getName()] = array();
-        }
+        $ranked_teams = $ranking->getStandardisedData();
 
-        foreach ($tournament->getTeams() as $team){
-            $ranked_teams['all'][] = $team->toArray();
-            $ranked_teams[$team->getPool()->getName()][] = $team->toArray();
-        }
-
-        usort($ranked_teams['all'], function ($a, $b) {
-            return $a['points'] < $b['points'];
-        });
-
-        foreach ($tournament->getPools() as $pool) {
-            usort($ranked_teams[$pool->getName()], function ($a, $b) {
-                return $a['points'] < $b['points'];
-            });
-        }
 
         header('HTTP/1.0 200 OK');
         header('Content-Type: application/json');
@@ -206,7 +191,7 @@ class MatchController extends BaseController {
 
             $matchGenerator = new MatchGenerator($this->entityManager, $tournament); // Init the MatchGenerator service with Doctrine and the tournament
 
-            $matchs = $matchGenerator->generateRankingMatchs(); // Generate matchs
+            $matchGenerator->generateRankingMatchs(); // Generate matchs
         }
 
         header('Location: ' . $this->router->generate('admin_tournament_edit', ['id' => $tournament->getId()])); // Redirect to tournament's edit page

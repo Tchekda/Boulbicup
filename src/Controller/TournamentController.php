@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Entity\Team;
 use Entity\Tournament;
 use Service\App;
+use Service\Ranking;
 
 require '../vendor/autoload.php';
 
@@ -126,18 +127,11 @@ class TournamentController extends BaseController {
      */
     public function tournamentEdit(string $id) {
         $tournament = $this->findTournamentByID($id); // Try to find the tournament by the given id, If not found : redirected to tournaments list
-        $ranked_teams = ['all' => $tournament->getTeams()->getValues()];
 
-        usort($ranked_teams['all'], function ($a, $b) {
-            return $a->getPoints() < $b->getPoints();
-        });
 
-        foreach ($tournament->getPools() as $pool) {
-            $ranked_teams[$pool->getName()] = $pool->getTeams()->getValues();
-            usort($ranked_teams[$pool->getName()], function ($a, $b) {
-                return $a->getPoints() < $b->getPoints();
-            });
-        }
+        $ranking = new Ranking($tournament);
+
+        $ranked_teams = $ranking->getStandardisedData();
 
 
         echo $this->twig->render('admin/manage/tournament/tournament_edit.html.twig',

@@ -270,9 +270,29 @@ class MatchGenerator {
     }
 
 
-    public function generateRankingMatchs(): array {
-        foreach ($this->tournament->getMatchs() as $match) {
-
+    /**
+     * Generates Ranking matchs after the pool phase
+     */
+    public function generateRankingMatchs() {
+        $rankings = array();
+        $ranking = new Ranking($this->tournament);
+        foreach ($this->tournament->getPools() as $pool) {
+            $rankings[$pool->getId()] = $ranking->getPoolRanking($pool);
         }
+
+
+        foreach ($this->tournament->getMatchs() as $match) {
+            if ($match->getType() == Match::TYPE_RANKING) {
+                if (preg_match('/(\d):(\d)/', $match->getHostReference(), $host_data) and
+                    preg_match('/(\d):(\d)/', $match->getAwayReference(), $away_data)){
+                    $match->setHost($rankings[intval($host_data[2])][intval($host_data[1] - 1)]);
+                    $match->setAway($rankings[intval($away_data[2])][intval($away_data[1] - 1)]);
+                    $match->setHostReference(null);
+                    $match->setAwayReference(null);
+                }
+            }
+        }
+        $this->entityManager->flush();
+        return $this->tournament->getMatchs();
     }
 }

@@ -13,7 +13,7 @@
         <a class="btn green disabled" href="#">IL reste des matchs de Pool à jouer</a>
     {% elseif tournament.isState(4) %}
         <p>Vérifier les scores, il ne vous sera plus possible de les modifier ensuite! Puis recalculez sur la page "Equipes"</p>
-        <a class="btn green" href="#">Générer les matchs de classement</a>
+        <a class="btn green" href="{{ path('admin_ranking_match_generate', {'id': tournament.id }) }}">Générer les matchs de classement</a>
     {% else %}
         <a class="btn green disabled" href="#">TODO</a>
     {% endif %}

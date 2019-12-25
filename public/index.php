@@ -26,24 +26,32 @@ $router = new AltoRouter();
 // Define all routes
 try {
     $router->addRoutes(array(
+        // Home
         array('GET', '/', array(HomeController::class, 'homepage'), 'homepage'),
         array('GET', '/contact', array(HomeController::class, 'contact'), 'contact'), // TODO Contact Page
         array('GET', '/tournament/[i:id]', array(HomeController::class, 'homepage'), 'tournament'), // TODO Tournament Page
         array('GET', '/login', array(HomeController::class, 'login'), 'admin_login'),
         array('POST', '/login', array(HomeController::class, 'loginForm'), 'admin_login_form'),
+        // Admin
         array('GET', '/admin/', array(AdminController::class, 'index'), 'admin_index'),
         array('GET', '/admin/logout', array(AdminController::class, 'logout'), 'admin_logout'),
+        array('GET', '/admin/users', array(AdminController::class, 'userList'), 'admin_user_list'),
+        // Tournament
         array('GET', '/admin/tournaments', array(TournamentController::class, 'tournamentList'), 'admin_tournament_list'),
         array('GET', '/admin/tournament/new', array(TournamentController::class, 'tournamentNew'), 'admin_tournament_new'),
         array('POST', '/admin/tournament/submit', array(TournamentController::class, 'tournamentSubmitForm'), 'admin_tournament_new_form'),
         array('GET', '/admin/tournament/edit/[i:id]', array(TournamentController::class, 'tournamentEdit'), 'admin_tournament_edit'),
+        // Team
         array('GET', '/admin/teams/new/[i:id]', array(TeamController::class, 'teamNew'), 'admin_team_new'),
         array('POST', '/admin/teams/new/[i:id]', array(TeamController::class, 'teamNewForm'), 'admin_team_new_form'),
+        // Match
+        array('GET', '/admin/matchs/pool/generate/[i:id]', array(MatchController::class, 'generatePoolMatchs'), 'admin_pool_match_generate'),
+        array('GET', '/admin/matchs/ranking/generate/[i:id]', array(MatchController::class, 'generateRankingMatchs'), 'admin_ranking_match_generate'),
+        // AJAX
         array('POST', '/ajax/admin/tournament/delete/[i:id]', array(TournamentController::class, 'ajaxTournamentDelete'), 'ajax_admin_tournament_delete'),
         array('POST', '/ajax/admin/team/delete/[i:id]', array(TeamController::class, 'ajaxTeamDelete'), 'ajax_admin_team_delete'),
         array('POST', '/ajax/admin/pool/delete/[i:id]', array(TeamController::class, 'ajaxPoolDelete'), 'ajax_admin_pool_delete'),
-        array('GET', '/admin/users', array(AdminController::class, 'userList'), 'admin_user_list'),
-        array('GET', '/admin/matchs/pool/generate/[i:id]', array(MatchController::class, 'generatePoolMatchs'), 'admin_pool_match_generate'),
+
         array('POST', '/ajax/admin/matchs/pool/edit/[i:id]', array(MatchController::class, 'ajaxPoolMatchEdit'), 'ajax_admin_pool_match_edit'),
         array('POST', '/ajax/admin/matchs/recalculate/[i:id]', array(MatchController::class, 'ajaxRecalcutatePoints'), 'ajax_admin_match_recalculate'),
     ));

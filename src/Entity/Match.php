@@ -45,13 +45,13 @@ class Match {
      * @var string
      * @Column(type="string", nullable=true)
      */
-    protected $host_reference;
+    protected $host_reference = null;
 
     /**
      * @var string
      * @Column(type="string", nullable=true)
      */
-    protected $away_reference;
+    protected $away_reference = null;
 
     /**
      * @Column(type="integer",)
@@ -170,10 +170,10 @@ class Match {
     }
 
     /**
-     * @param string $host_reference
+     * @param string|null $host_reference
      * @return Match
      */
-    public function setHostReference(string $host_reference): Match {
+    public function setHostReference($host_reference): Match {
         $this->host_reference = $host_reference;
         return $this;
     }
@@ -186,10 +186,10 @@ class Match {
     }
 
     /**
-     * @param string $away_reference
+     * @param string|null $away_reference
      * @return Match
      */
-    public function setAwayReference(string $away_reference): Match {
+    public function setAwayReference($away_reference): Match {
         $this->away_reference = $away_reference;
         return $this;
     }
