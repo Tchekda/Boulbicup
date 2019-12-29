@@ -42,7 +42,13 @@ class BaseController {
         $path_function = new TwigFunction('path', function (string $name, array $params = array()) { // Add path generator function
             return $this->router->generate($name, $params);
         });
+
+        $id_dev_function = new TwigFunction('is_dev', function () { // Add path generator function
+            return getenv('dev', true) ?: getenv('dev');
+        });
+
         $this->twig->addFunction($path_function);
+        $this->twig->addFunction($id_dev_function);
 
 
         $this->twig->addExtension(new \Twig_Extensions_Extension_Intl());

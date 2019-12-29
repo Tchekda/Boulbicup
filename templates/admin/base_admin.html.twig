@@ -6,8 +6,8 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}Accueil{% endblock %} - Admin</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="{{ (is_dev() == 0 ? "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0") }}/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ (is_dev() == 0 ? "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0") }}/css/materialize.min.css">
     <link rel="stylesheet" href="/css/admin.css">
     {% block stylesheets %}{% endblock %}
 </head>
@@ -42,8 +42,8 @@
         </div>
     </div>
 </footer>
-<script src="https://code.jquery.com/jquery-latest.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="{{ (is_dev() ? '/js' : "https://code.jquery.com") }}/jquery-latest.min.js"></script>
+<script src="{{ (is_dev() == 0 ? "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0") }}/js/materialize.min.js"></script>
 <script src="/js/init.js"></script>
 <script>
     (function ($) {
