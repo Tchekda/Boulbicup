@@ -137,11 +137,12 @@ class TeamController extends BaseController
         if ($tournament->getState() == Tournament::STATE_CREATED){
             $tournament->setState(Tournament::STATE_TEAM_FILLED);
         }
-        $this->entityManager->flush();
 
 //        dump($_POST);
 //        dump($pools);
 //        dd($tournament);
+        $this->entityManager->flush();
+
         header('Location: ' . $this->router->generate('admin_tournament_edit', ['id' => $tournament->getId()])); // Redirect to Tournament's edit page
         exit();
     }

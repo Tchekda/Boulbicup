@@ -56,8 +56,12 @@ class MatchController extends BaseController {
                 foreach ($tournament->getMatchs() as $match) { // Remove them
                     $this->entityManager->remove($match);
                 }
-                $this->entityManager->flush();
             }
+            foreach ($tournament->getTeams() as $team) {
+                $team->setPoints(0);
+            }
+            $this->entityManager->flush();
+
 
             $matchGenerator = new MatchGenerator($this->entityManager, $tournament); // Init the MatchGenerator service with Doctrine and the tournament
 
@@ -83,7 +87,11 @@ class MatchController extends BaseController {
                     echo 'Pool phase already ended';
                     exit();
                 }
+
+                $matchs = array();
+                $matchGenerator = new MatchGenerator($this->entityManager, $tournament);
                 $previousState = $match->getState();
+
                 $match->setHost($this->entityManager->getRepository("Entity\\Team")->find(intval($_POST['host-team'])));
                 $match->setAway($this->entityManager->getRepository("Entity\\Team")->find(intval($_POST['away-team'])));
                 $match->setHostScore(intval($_POST['host-score']));
@@ -95,11 +103,11 @@ class MatchController extends BaseController {
                 if ($tournament->getState() < Tournament::STATE_POOL_PHASE) {
                     $tournament->setState(Tournament::STATE_POOL_PHASE);
                 }
-                if ($match->getState() < Match::STATE_EXPECTED) {
+                if ($match->getState() <= Match::STATE_EXPECTED) {
                     $match->setState(Match::STATE_IN_PROGRESS);
                 }
-                if ($match->getType() == Match::TYPE_POOL) {
-                    if ($previousState != $match->getState() && $match->getState() == Match::STATE_FINISHED) { // Game had just finished
+                if ($previousState != $match->getState() && $match->getState() == Match::STATE_FINISHED) { // Game had just finished
+                    if ($match->getType() == Match::TYPE_POOL) {
                         if ($match->getHostScore() > $match->getAwayScore()) {
                             $match->getHost()->addPoints(3);
                             $match->getAway()->addPoints(1);
@@ -110,29 +118,71 @@ class MatchController extends BaseController {
                             $match->getHost()->addPoints(2);
                             $match->getAway()->addPoints(2);
                         }
-                        $matchGenerator = new MatchGenerator($this->entityManager, $tournament); // Init the MatchGenerator service with Doctrine and the tournament
                         if ($matchGenerator->allPoolGamesFinished()) {
                             $tournament->setState(Tournament::STATE_PRE_RANKING_PHASE);
                         }
+                    } else { // Ranking Game
+                        if ($match->getHostScore() > $match->getAwayScore()) {
+                            $winner = $match->getHost();
+                            $looser = $match->getAway();
+                        } elseif ($match->getHostScore() < $match->getAwayScore()) {
+                            $looser = $match->getHost();
+                            $winner = $match->getAway();
+                        } else { // Equal score not possible
+                            header('HTTP/1.0 403 Forbidden');
+                            echo "Can't end with an equal score";
+                            exit();
+                        }
+                        if ($match->getName() != null) { // Never knows....
+                            if (preg_match("/^PO\d$/", $match->getName())) { // PO's Game
+                                header('HTTP/1.0 403 Forbidden');
+                                /** @var Match $winnerGame Get winner's next game */
+                                $winnerGame = $this->entityManager->getRepository("Entity\\Match")->findFutureRankingMatch("V", $match->getName());
+                                /** @var Match $looserGame */
+                                $looserGame = $this->entityManager->getRepository("Entity\\Match")->findFutureRankingMatch("L", $match->getName());
+
+
+                                if ($winnerGame->getHostReference() != null and $winnerGame->getHostReference() == "V(" . $match->getName() . ")") {
+                                    $winnerGame->setHost($winner);
+                                    $winnerGame->setHostReference(null);
+                                } else {
+                                    $winnerGame->setAway($winner);
+                                    $winnerGame->setAwayReference(null);
+                                }
+
+                                if ($looserGame->getHostReference() != null and $looserGame->getHostReference() == "L(" . $match->getName() . ")") {
+                                    $looserGame->setHost($looser);
+                                    $looserGame->setHostReference(null);
+                                } else {
+                                    $looserGame->setAway($looser);
+                                    $looserGame->setAwayReference(null);
+                                }
+
+                                $matchs[] = MatchGenerator::standardiseMatchData($winnerGame);
+                                $matchs[] = MatchGenerator::standardiseMatchData($looserGame);
+                            }else { // Final ranking
+                                preg_match("/^(\d)-(\d)$/", $match->getName(), $finalRanks);
+                                $winner->setFinalRanking(intval($finalRanks[1]));
+                                $looser->setFinalRanking(intval($finalRanks[2]));
+                            }
+                        }else { // Game without name
+                            header('HTTP/1.0 403 Forbidden');
+                            echo "This game has no name";
+                            exit();
+                        }
+
                     }
                 }
 
 
                 $this->entityManager->flush();
 
-                $data = [
-                    'id' => $match->getId(),
-                    'host' => $match->getHost()->getName(),
-                    'away' => $match->getAway()->getName(),
-                    'score' => $match->getHostScore() . ' : ' . $match->getAwayScore(),
-                    'time' => $match->getTime()->format("d/m/Y H:i"),
-                    'type' => $match->getTypeName(),
-                    'state' => $match->getStateName()
-                ];
+
+                $matchs[] = MatchGenerator::standardiseMatchData($match);
 
                 header('HTTP/1.0 200 OK');
                 header('Content-Type: application/json');
-                echo json_encode($data);
+                echo json_encode($matchs);
             } else {
                 header('HTTP/1.0 404 Not Found');
                 echo 'Match not found';
@@ -147,29 +197,11 @@ class MatchController extends BaseController {
     }
 
 
-    public function ajaxRecalcutatePoints(string $id){
+    public function ajaxRecalcutatePoints(string $id) {
         $tournament = $this->findTournamentByID($id); // Try to find the tournament by the given id, If not found : redirected to tournaments list
 
-        foreach ($tournament->getTeams() as $team) {
-            $team->setPoints(0);
-        }
-
-        foreach ($tournament->getMatchs() as $match) {
-            if ($match->getState() == Match::STATE_FINISHED) {
-                if ($match->getHostScore() > $match->getAwayScore()) {
-                    $match->getHost()->addPoints(3);
-                    $match->getAway()->addPoints(1);
-                } elseif ($match->getHostScore() < $match->getAwayScore()) {
-                    $match->getHost()->addPoints(1);
-                    $match->getAway()->addPoints(3);
-                } else {
-                    $match->getHost()->addPoints(2);
-                    $match->getAway()->addPoints(2);
-                }
-            }
-        }
-
-        $this->entityManager->flush();
+        $matchGenerator = new MatchGenerator($this->entityManager, $tournament);
+        $matchGenerator->recalculatePoints();
 
         $ranking = new Ranking($tournament);
 
@@ -180,6 +212,7 @@ class MatchController extends BaseController {
         header('Content-Type: application/json');
         echo json_encode($ranked_teams);
     }
+
     /**
      * @param string $id
      * Replace Team references by real teams
@@ -189,9 +222,16 @@ class MatchController extends BaseController {
 
         if ($tournament->getState() == Tournament::STATE_PRE_RANKING_PHASE) {
 
+            $matchGenerator = new MatchGenerator($this->entityManager, $tournament);
+            $matchGenerator->recalculatePoints();
+
             $matchGenerator = new MatchGenerator($this->entityManager, $tournament); // Init the MatchGenerator service with Doctrine and the tournament
 
             $matchGenerator->generateRankingMatchs(); // Generate matchs
+
+            $tournament->setState(Tournament::STATE_RANKING_PHASE);
+
+            $this->entityManager->flush();
         }
 
         header('Location: ' . $this->router->generate('admin_tournament_edit', ['id' => $tournament->getId()])); // Redirect to tournament's edit page

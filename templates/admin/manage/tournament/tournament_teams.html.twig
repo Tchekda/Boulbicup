@@ -7,26 +7,27 @@
         <table class="striped highlight centered responsive-table rankings" id="rankingPool-{{ pool }}">
             <thead>
             <tr>
-                <th>ID</th>
+                <th>Classement</th>
                 <th>Nom</th>
                 <th>Points</th>
-                <th>Classement</th>
+                <th>ID</th>
             </tr>
             </thead>
             <tbody>
             {% for team in teams %}
                 <tr id="team_pool_{{ team.id }}">
-                    <td>{{ team.id }}</td>
+                    <td>{{ loop.index }}</td>
                     <td>{{ team.name }}</td>
                     <td>{{ team.points }}</td>
-                    <td>{{ loop.index }}</td>
+                    <td>{{ team.id }}</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
 {% endfor %}
-<h3 class="center">Classement Général</h3>
+{% if tournament.state <= 4 %}
+<h3 class="center">Classement Général de Pool</h3>
 <div class="center">
     <a class="btn green" id="recalculateLink" href="{{ path('ajax_admin_match_recalculate', {'id': tournament.id}) }}">Recalculer les points</a>
 </div>
@@ -50,3 +51,22 @@
     {% endfor %}
     </tbody>
 </table>
+{% else %}
+    <h3 class="center">Classement Final</h3>
+    <table class="striped highlight centered responsive-table rankings" id="finalRanking">
+        <thead>
+        <tr>
+            <th>Position</th>
+            <th>Nom</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for team in ranked_teams.all %}
+            <tr id="team_final_{{ team.id }}">
+                <td>{{ team.rank }}</td>
+                <td>{{ team.name }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

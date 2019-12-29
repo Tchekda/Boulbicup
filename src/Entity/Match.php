@@ -14,10 +14,7 @@ use Doctrine\ORM\Mapping\UniqueConstraint;
 
 /**
  * @Entity(repositoryClass="Repository\MatchRepository")
- * @Table(name="`match`", uniqueConstraints={
- *        @UniqueConstraint(name="tournament_match_type",
- *            columns={"tournament_id", "host_id", "away_id", "type"})
- *    })
+ * @Table(name="`match`")
  **/
 class Match {
 

@@ -23,7 +23,7 @@ class Ranking {
     /**
      * @return Team[]
      */
-    public function getGlobalRanking(){
+    public function getGlobalRanking() {
         $teams = $this->tournament->getTeams()->getValues();
         usort($teams, function ($a, $b) {
             return $a->getPoints() < $b->getPoints();
@@ -35,7 +35,7 @@ class Ranking {
      * @param Pool $pool
      * @return Team[]
      */
-    public function getPoolRanking(Pool $pool){
+    public function getPoolRanking(Pool $pool) {
         $teams = $pool->getTeams()->getValues();
         usort($teams, function ($a, $b) {
             return $a->getPoints() < $b->getPoints();
@@ -46,32 +46,54 @@ class Ranking {
     /**
      * @return array
      */
-    public function getAllPoolsRanking(){
+    public function getAllPoolsRanking() {
         $teams = array();
-        foreach ($this->tournament->getPools() as $pool){
+        foreach ($this->tournament->getPools() as $pool) {
             $teams[$pool->getName()] = $this->getPoolRanking($pool);
         }
         return $teams;
     }
 
-    public function getAllMergedRankings(){
+    public function getAllMergedRankings() {
         $result = array_merge(array("all" => $this->getGlobalRanking()), $this->getAllPoolsRanking());
         return $result;
     }
 
-    public function getStandardisedData(){
+    public function getStandardisedData() {
         $result = array();
-        $data = $this->getAllMergedRankings();
 
-        foreach ($data as $pool => $teams) {
-            $result[$pool] = array();
-            /** @var Team $team */
+        if ($this->tournament->getState() <= Tournament::STATE_PRE_RANKING_PHASE) {
+
+
+            $data = $this->getAllMergedRankings();
+
+            foreach ($data as $pool => $teams) {
+                $result[$pool] = array();
+                /** @var Team $team */
+                foreach ($teams as $team) {
+                    $result[$pool][] = array(
+                        'id' => $team->getId(),
+                        'name' => $team->getName(),
+                        'points' => $team->getPoints(),
+                        'pool' => $team->getPool()->getName()
+                    );
+                }
+            }
+        }else {
+            $teams = $this->tournament->getTeams()->getValues();
+            usort($teams, function ($a, $b) {
+                return $a->getFinalRanking() < $b->getFinalRanking();
+            });
             foreach ($teams as $team) {
-                $result[$pool][] = array(
+                $result[$team->getPool()->getName()][] = array(
                     'id' => $team->getId(),
                     'name' => $team->getName(),
                     'points' => $team->getPoints(),
                     'pool' => $team->getPool()->getName()
+                );
+                $result['all'][] = array(
+                    'name' => $team->getName(),
+                    'rank' => $team->getFinalRanking(),
                 );
             }
         }

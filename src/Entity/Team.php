@@ -43,6 +43,12 @@ class Team
     protected $points = 0;
 
     /**
+     * @Column(type="integer")
+     * @var int
+     */
+    protected $finalRanking = 0;
+
+    /**
      * @ManyToOne(targetEntity="Pool", inversedBy="teams")
      * @JoinColumn(name="pool_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Pool
@@ -116,6 +122,23 @@ class Team
     {
         $this->points = $points;
     }
+
+    /**
+     * @return int
+     */
+    public function getFinalRanking(): int {
+        return $this->finalRanking;
+    }
+
+    /**
+     * @param int $finalRanking
+     * @return Team
+     */
+    public function setFinalRanking(int $finalRanking): Team {
+        $this->finalRanking = $finalRanking;
+        return $this;
+    }
+
 
     /**
      * @return Pool

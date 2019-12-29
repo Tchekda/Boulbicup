@@ -129,6 +129,7 @@ class TournamentController extends BaseController {
         $tournament = $this->findTournamentByID($id); // Try to find the tournament by the given id, If not found : redirected to tournaments list
 
 
+
         $ranking = new Ranking($tournament);
 
         $ranked_teams = $ranking->getStandardisedData();

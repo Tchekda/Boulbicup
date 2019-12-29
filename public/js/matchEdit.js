@@ -29,50 +29,56 @@
         let options = {
             success: function (data) {
                 M.toast({html: 'Match mis à jour', classes: "green"});
-                let matchElement = $("#match-" + data.id).children();
-
-                matchElement.eq(1).html(data.host);
-                matchElement.eq(2).html(data.away);
-                matchElement.eq(3).html(data.time);
-                matchElement.eq(4).html(data.type);
-                matchElement.eq(6).html(data.score);
-                matchElement.eq(7).html(data.state);
+                for (id in data) {
+                    if (data.hasOwnProperty(id)) {
+                        let match = data[id],
+                            matchElement = $("#match-" + match.id).children();
+                        console.log(match);
+                        matchElement.eq(1).html(match.host);
+                        matchElement.eq(2).html(match.away);
+                        matchElement.eq(3).html(match.time);
+                        matchElement.eq(4).html(match.type);
+                        matchElement.eq(6).html(match.score);
+                        matchElement.eq(7).html(match.state);
+                    }
+                }
             },
             error: function (data) {
                 M.toast({html: data.responseText, classes: "red"});
+                console.log(data.responseText)
             }
         };
         $('#matchEditForm').ajaxForm(options);
 
 
-        $('#recalculateLink').click(function(event) {
+        $('#recalculateLink').click(function (event) {
             event.preventDefault();
             $.ajax({
                 url: $(this).attr('href'),
                 method: 'POST',
-                success: function(response) {
+                success: function (response) {
                     M.toast({html: 'Les points ont été recalculés', classes: "green"});
                     $('.rankings tbody').empty();
-                    for ($ct in response['all']){
+                    for ($ct in response['all']) {
                         let $team = response['all'][$ct];
                         $("#globalRanking tbody").append("<tr>"
-                             + "<td>" + (parseInt($ct) + 1) + "</td>"
-                             + "<td>" + $team['name'] + "</td>"
-                             + "<td>" + $team['points'] + "</td>"
-                             + "<td>" + $team['pool'] + "</td>"
-                             + "</tr>" );
+                            + "<td>" + (parseInt($ct) + 1) + "</td>"
+                            + "<td>" + $team['name'] + "</td>"
+                            + "<td>" + $team['points'] + "</td>"
+                            + "<td>" + $team['pool'] + "</td>"
+                            + "</tr>");
                     }
 
-                    for ($pool in response){
-                        if ($pool !== "all"){
-                            for ($ct in response[$pool]){
+                    for ($pool in response) {
+                        if ($pool !== "all") {
+                            for ($ct in response[$pool]) {
                                 let $team = response[$pool][$ct];
                                 $("#rankingPool-" + $pool + " tbody").append("<tr>"
                                     + "<td>" + $team['id'] + "</td>"
                                     + "<td>" + $team['name'] + "</td>"
                                     + "<td>" + $team['points'] + "</td>"
                                     + "<td>" + (parseInt($ct) + 1) + "</td>"
-                                    + "</tr>" );
+                                    + "</tr>");
 
                             }
                         }

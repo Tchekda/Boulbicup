@@ -19,4 +19,13 @@ class MatchRepository extends EntityRepository
             ->getResult();
     }
 
+    public function findFutureRankingMatch(string $outcome, string $gameID) {
+        return $this->createQueryBuilder('m')
+            ->select('m')
+            ->where("m.host_reference = ?1 OR m.away_reference = ?1")
+            ->setParameter(1, $outcome . "(" . $gameID . ")")
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
 }

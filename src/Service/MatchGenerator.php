@@ -134,31 +134,31 @@ class MatchGenerator {
                 );
 
                 $matchs[] = array( // Winner PO3 vs Winner PO4
-                    "V(P03)",
+                    "V(PO3)",
                     "V(PO4)",
                     "7-8"
                 );
 
                 $matchs[] = array( // Looser PO3 vs Looser PO4
-                    "L(P03)",
-                    "L(PO6)",
+                    "L(PO3)",
+                    "L(PO4)",
                     "9-10"
                 );
 
                 $matchs[] = array( // Looser PO1 vs Looser PO2
-                    "L(P01)",
+                    "L(PO1)",
                     "L(PO2)",
                     "5-6"
                 );
 
                 $matchs[] = array( // Looser PO5 vs Looser PO6 : Little Final
-                    "L(P05)",
+                    "L(PO5)",
                     "L(PO6)",
                     "3-4"
                 );
 
                 $matchs[] = array( // Winner P05 vs Winner PO6 : Final
-                    "V(P05)",
+                    "V(PO5)",
                     "V(PO6)",
                     "1-2"
                 );
@@ -269,6 +269,31 @@ class MatchGenerator {
         return true;
     }
 
+    /**
+     * Recalculates all teams points in this tournament
+     */
+    public function recalculatePoints(){
+        foreach ($this->tournament->getTeams() as $team) {
+            $team->setPoints(0);
+        }
+
+        foreach ($this->tournament->getMatchs() as $match) {
+            if ($match->getState() == Match::STATE_FINISHED) {
+                if ($match->getHostScore() > $match->getAwayScore()) {
+                    $match->getHost()->addPoints(3);
+                    $match->getAway()->addPoints(1);
+                } elseif ($match->getHostScore() < $match->getAwayScore()) {
+                    $match->getHost()->addPoints(1);
+                    $match->getAway()->addPoints(3);
+                } else {
+                    $match->getHost()->addPoints(2);
+                    $match->getAway()->addPoints(2);
+                }
+            }
+        }
+
+        $this->entityManager->flush();
+    }
 
     /**
      * Generates Ranking matchs after the pool phase
@@ -283,16 +308,35 @@ class MatchGenerator {
 
         foreach ($this->tournament->getMatchs() as $match) {
             if ($match->getType() == Match::TYPE_RANKING) {
-                if (preg_match('/(\d):(\d)/', $match->getHostReference(), $host_data) and
-                    preg_match('/(\d):(\d)/', $match->getAwayReference(), $away_data)){
+                if (preg_match('/(\d):(\d)/', $match->getHostReference(), $host_data)){
                     $match->setHost($rankings[intval($host_data[2])][intval($host_data[1] - 1)]);
-                    $match->setAway($rankings[intval($away_data[2])][intval($away_data[1] - 1)]);
                     $match->setHostReference(null);
+                }
+                if (preg_match('/(\d):(\d)/', $match->getAwayReference(), $away_data)){
+                    $match->setAway($rankings[intval($away_data[2])][intval($away_data[1] - 1)]);
                     $match->setAwayReference(null);
                 }
             }
         }
         $this->entityManager->flush();
         return $this->tournament->getMatchs();
+    }
+
+
+    /**
+     * @param Match $match
+     * @return array
+     */
+    public static function standardiseMatchData(Match $match){
+        $data = [
+            'id' => $match->getId(),
+            'host' => $match->getHost() ? $match->getHost()->getName() : $match->getHostReference(),
+            'away' => $match->getAway() ? $match->getAway()->getName() : $match->getAwayReference(),
+            'score' => $match->getHostScore() . ' : ' . $match->getAwayScore(),
+            'time' => $match->getTime()->format("d/m/Y H:i"),
+            'type' => $match->getTypeName(),
+            'state' => $match->getStateName()
+        ];
+        return $data;
     }
 }
