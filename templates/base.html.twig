@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="/images/boulbicup_logo.png" type="image/x-icon">
     <title>{% block title %}Accueil{% endblock %} - Boulbicup</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="{{ (is_dev() == 0 ? "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0") }}/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ (is_dev() == 0 ? "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0") }}/css/materialize.min.css">
     <link rel="stylesheet" href="/css/homepage.css">
     {% block stylesheets %}{% endblock %}
 </head>
@@ -44,8 +44,9 @@
         </div>
     </div>
 </footer>
-<script src="https://code.jquery.com/jquery-latest.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src="{{ (is_dev() ? '/js' : "https://code.jquery.com") }}/jquery-latest.min.js"></script>
+<script src="{{ (is_dev() == 0 ? "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0") }}/js/materialize.min.js"></script>
+<script src="/js/init.js"></script>
 <script>
     (function ($) {
         {% for color, message in notifications %}

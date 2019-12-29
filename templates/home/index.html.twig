@@ -5,8 +5,8 @@
             <div class="container">
                 <h1 class="header center white-text" style="font-weight: 700; font-size: 5rem;">#boulbicup</h1>
                 <div class="center video-container">
-                    <iframe src="//www.youtube.com/embed/37nJCS-HJ3w?wmode=opaque"
-                            frameborder="0" allowfullscreen></iframe>
+{#                    <iframe src="//www.youtube.com/embed/37nJCS-HJ3w?wmode=opaque"#}
+{#                            frameborder="0" allowfullscreen></iframe>#}
                 </div>
                 <div class="row center">
                     <h5 class="header col s12" style="color: #2a2a2a; font-size: 5rem;font-weight: 700">Passion
@@ -59,7 +59,7 @@
                     <p>Le club des Tigres de Boulogne Billancourt est heureux de vous inviter à la
                         {{ ((future_tournaments is defined ? future_tournaments.0.date.0.year : "now")|date('Y') - "01-05-2016"|date('Y')) }}
                         ème édition de
-                        ses tournois qui se dérouleront respectivement les {# TODO link to tournaments list#}
+                        ses tournois qui se dérouleront respectivement les
                         {% for tournament in future_tournaments %}
                             <span class="bold">
                                 {{ tournament.startdatetimefirstday|localizeddate('none', 'none', 'fr', null, 'd MMMM')|title }} -
@@ -155,7 +155,4 @@
 
 
 
-{% endblock %}
-{% block javascripts %}
-    <script src="/js/init.js"></script>
 {% endblock %}

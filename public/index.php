@@ -29,7 +29,7 @@ try {
         // Home
         array('GET', '/', array(HomeController::class, 'homepage'), 'homepage'),
         array('GET', '/contact', array(HomeController::class, 'contact'), 'contact'), // TODO Contact Page
-        array('GET', '/tournament/[i:id]', array(HomeController::class, 'homepage'), 'tournament'), // TODO Tournament Page
+        array('GET', '/tournament/[i:id]', array(HomeController::class, 'tournamentShow'), 'tournament_show'),
         array('GET', '/login', array(HomeController::class, 'login'), 'admin_login'),
         array('POST', '/login', array(HomeController::class, 'loginForm'), 'admin_login_form'),
         // Admin

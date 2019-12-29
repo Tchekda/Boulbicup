@@ -1,9 +1,16 @@
+<ul id='tournaments-dropdown' class='dropdown-content green'>
+    {% for tournament in tournaments %}
+        <li><a href="{{ path('tournament_show', {'id': tournament.id}) }}">{{ tournament.name }} U{{ tournament.category }} ({{ tournament.startdatetime|date('Y') }})</a></li>
+    {% else %}
+        <li><a href="#">Aucun tournoi</a></li>
+    {% endfor %}
+</ul>
 <nav class="black" role="navigation">
     <div class="nav-wrapper container">
         <a id="logo-container" href="{{ path('homepage') }}" class="brand-logo white-text" style="font-weight: bold">PLAY.</a>
         <ul class="right hide-on-med-and-down">
             <li>
-                <a class="dropdown-trigger white-text" href="#" data-target='tournaments-dropdown'>
+                <a class="dropdown-trigger white-text" href="#!" data-target='tournaments-dropdown'>
                     TOURNOIS<i class="fa fa-chevron-down right"></i>
                 </a>
             </li>
@@ -25,10 +32,3 @@
         <a href="#" data-target="nav-mobile" class="sidenav-trigger white-text"><i class="fa fa-bars"></i></a>
     </div>
 </nav>
-<ul id='tournaments-dropdown' class='dropdown-content green'>
-    {% for tournament in tournaments %}
-        <li><a href="#">{{ tournament.name }} U{{ tournament.category }} ({{ tournament.startdatetime|date('Y') }})</a></li>
-    {% else %}
-        <li><a href="#">Aucun tournoi</a></li>
-    {% endfor %}
-</ul>
