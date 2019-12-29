@@ -261,8 +261,21 @@ class MatchGenerator {
      * Checks if all Pool games are finished to init the ranking phase
      */
     public function allPoolGamesFinished(): bool {
-        foreach ($this->tournament->getMatchs() as $match){
-            if ($match->getType() == Match::TYPE_POOL and $match->getState() != Match::STATE_FINISHED){
+        foreach ($this->tournament->getMatchs() as $match) {
+            if ($match->getType() == Match::TYPE_POOL and $match->getState() != Match::STATE_FINISHED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @return bool
+     * Checks if all Pool games are finished to init the ranking phase
+     */
+    public function allGamesFinished(): bool {
+        foreach ($this->tournament->getMatchs() as $match) {
+            if ($match->getState() != Match::STATE_FINISHED) {
                 return false;
             }
         }
@@ -272,7 +285,7 @@ class MatchGenerator {
     /**
      * Recalculates all teams points in this tournament
      */
-    public function recalculatePoints(){
+    public function recalculatePoints() {
         foreach ($this->tournament->getTeams() as $team) {
             $team->setPoints(0);
         }
@@ -308,11 +321,11 @@ class MatchGenerator {
 
         foreach ($this->tournament->getMatchs() as $match) {
             if ($match->getType() == Match::TYPE_RANKING) {
-                if (preg_match('/(\d):(\d)/', $match->getHostReference(), $host_data)){
+                if (preg_match('/(\d):(\d)/', $match->getHostReference(), $host_data)) {
                     $match->setHost($rankings[intval($host_data[2])][intval($host_data[1] - 1)]);
                     $match->setHostReference(null);
                 }
-                if (preg_match('/(\d):(\d)/', $match->getAwayReference(), $away_data)){
+                if (preg_match('/(\d):(\d)/', $match->getAwayReference(), $away_data)) {
                     $match->setAway($rankings[intval($away_data[2])][intval($away_data[1] - 1)]);
                     $match->setAwayReference(null);
                 }
@@ -327,7 +340,7 @@ class MatchGenerator {
      * @param Match $match
      * @return array
      */
-    public static function standardiseMatchData(Match $match){
+    public static function standardiseMatchData(Match $match) {
         $data = [
             'id' => $match->getId(),
             'host' => $match->getHost() ? $match->getHost()->getName() : $match->getHostReference(),

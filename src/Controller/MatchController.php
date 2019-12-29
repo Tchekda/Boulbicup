@@ -161,9 +161,13 @@ class MatchController extends BaseController {
                                 $matchs[] = MatchGenerator::standardiseMatchData($winnerGame);
                                 $matchs[] = MatchGenerator::standardiseMatchData($looserGame);
                             }else { // Final ranking
-                                preg_match("/^(\d)-(\d)$/", $match->getName(), $finalRanks);
+                                preg_match("/^(\d+)-(\d+)$/", $match->getName(), $finalRanks);
                                 $winner->setFinalRanking(intval($finalRanks[1]));
                                 $looser->setFinalRanking(intval($finalRanks[2]));
+
+                                if ($matchGenerator->allGamesFinished()){
+                                    $tournament->setState(Tournament::STATE_FINISHED);
+                                }
                             }
                         }else { // Game without name
                             header('HTTP/1.0 403 Forbidden');

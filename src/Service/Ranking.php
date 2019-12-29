@@ -82,7 +82,7 @@ class Ranking {
         }else {
             $teams = $this->tournament->getTeams()->getValues();
             usort($teams, function ($a, $b) {
-                return $a->getFinalRanking() < $b->getFinalRanking();
+                return $a->getFinalRanking() > $b->getFinalRanking();
             });
             foreach ($teams as $team) {
                 $result[$team->getPool()->getName()][] = array(
