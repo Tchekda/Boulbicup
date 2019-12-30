@@ -92,8 +92,8 @@
                             $('#user-' + data['id']).remove();
                         },
                         error: function (data) {
-                            console.log(data);
-                            M.toast({html: data, classes: "red"});
+                            console.log(data.responseText);
+                            M.toast({html: data.responseText, classes: "red"});
                         }
                     });
                     return false; // for good measure
