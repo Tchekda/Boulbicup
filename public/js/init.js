@@ -3,6 +3,7 @@
 
         $('.modal').modal();
         $('.dropdown-trigger').dropdown();
+        $('.dropdown-trigger-mobile').dropdown();
         $('.sidenav').sidenav();
         $('.parallax').parallax();
         $('.carousel').carousel({

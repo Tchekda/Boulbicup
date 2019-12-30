@@ -1,4 +1,5 @@
-<ul id='tournaments-dropdown' class='dropdown-content green'> {# TODO : Fix Dropdown #}
+<!-- Dropdown Structure -->
+<ul id="dropdown" class="dropdown-content">
     {% for tournament in tournaments %}
         <li><a href="{{ path('tournament_show', {'id': tournament.id}) }}">{{ tournament.name }} U{{ tournament.category }} ({{ tournament.startdatetime|date('Y') }})</a></li>
     {% else %}
@@ -8,27 +9,29 @@
 <nav class="black" role="navigation">
     <div class="nav-wrapper container">
         <a id="logo-container" href="{{ path('homepage') }}" class="brand-logo white-text" style="font-weight: bold">PLAY.</a>
+        <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="fa fa-bars"></i></a>
         <ul class="right hide-on-med-and-down">
-            <li>
-                <a class="dropdown-trigger white-text" href="#!" data-target='tournaments-dropdown'>
-                    TOURNOIS<i class="fa fa-chevron-down right"></i>
-                </a>
-            </li>
+            <!-- Dropdown Trigger -->
+            <li><a class="dropdown-trigger white-text" href="#!" data-target="dropdown">TOURNOIS<i class="fa fa-chevron-down right"></i></a></li>
             <li><a class="white-text" href="#">PHOTOS</a></li>
             <li><a class="white-text" href="#">NOUS CONTACTER</a></li>
             <li><a class="white-text" href="{{ path('admin_login') }}">ADMIN</a></li>
         </ul>
-
-        <ul id="nav-mobile" class="sidenav">
-            <li>
-                <a class="dropdown-trigger" href="#" data-target='tournaments-dropdown'>
-                    Tournois<i class="fa fa-chevron-down right"></i>
-                </a>
-            </li>
-            <li><a href="#" >Photos</a></li>
-            <li><a href="#">Nous Contactez</a></li>
-            <li><a href="{{ path('admin_login') }}">Admin</a></li>
-        </ul>
-        <a href="#" data-target="nav-mobile" class="sidenav-trigger white-text"><i class="fa fa-bars"></i></a>
     </div>
 </nav>
+
+
+<!-- Dropdown Structure -->
+<ul id="dropdown-mobile" class="dropdown-content">
+    {% for tournament in tournaments %}
+        <li><a href="{{ path('tournament_show', {'id': tournament.id}) }}">{{ tournament.name }} U{{ tournament.category }} ({{ tournament.startdatetime|date('Y') }})</a></li>
+    {% else %}
+        <li><a href="#">Aucun tournoi</a></li>
+    {% endfor %}
+</ul>
+<ul class="sidenav" id="mobile-nav">
+    <li><a class="dropdown-trigger" href="#!" data-target="dropdown-mobile">TOURNOIS<i class="fa fa-chevron-down right"></i></a></li>
+    <li><a href="#">PHOTOS</a></li>
+    <li><a href="#">NOUS CONTACTER</a></li>
+    <li><a href="{{ path('admin_login') }}">ADMIN</a></li>
+</ul>
