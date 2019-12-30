@@ -143,7 +143,7 @@ class TeamController extends BaseController
 //        dd($tournament);
         $this->entityManager->flush();
 
-        header('Location: ' . $this->router->generate('admin_tournament_edit', ['id' => $tournament->getId()])); // Redirect to Tournament's edit page
+        header('Location: ' . $this->router->generate('admin_tournament_edit', ['id' => $tournament->getId()]) . '#teams'); // Redirect to Tournament's edit page
         exit();
     }
 

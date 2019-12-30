@@ -61,18 +61,18 @@
                         ème édition de
                         ses tournois qui se dérouleront respectivement les
                         {% for tournament in future_tournaments %}
-                            <span class="bold">
+                            <a href="{{ path('tournament_show', {'id': tournament.id}) }}" class="bold">
                                 {{ tournament.startdatetimefirstday|localizeddate('none', 'none', 'fr', null, 'd MMMM')|title }} -
                                 {{ (tournament.enddatetimesecondday ? tournament.enddatetimesecondday : tournament.enddatetimefirstday)|localizeddate('none', 'none', 'fr', null, 'd MMMM')|title }}
                                 (U{{ tournament.category }})
-                            </span>
+                            </a>
                             {{ (loop.last == false and future_tournaments|length > 1 ?',') }}
                         {% else %}
                             (Aucun de prévu pour le moment)
                         {% endfor %}
                         à la patinoire de Boulogne Billancourt.
                         avec le concours du meilleur dessin en U7, les photos des tournois, le jeu du palet et bien
-                        d'autres surprises !</p>
+                        d'autres surprises !</>
                 </div>
 
                 <div class="col m4 s12">

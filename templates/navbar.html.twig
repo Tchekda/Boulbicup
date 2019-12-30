@@ -1,4 +1,4 @@
-<ul id='tournaments-dropdown' class='dropdown-content green'>
+<ul id='tournaments-dropdown' class='dropdown-content green'> {# TODO : Fix Dropdown #}
     {% for tournament in tournaments %}
         <li><a href="{{ path('tournament_show', {'id': tournament.id}) }}">{{ tournament.name }} U{{ tournament.category }} ({{ tournament.startdatetime|date('Y') }})</a></li>
     {% else %}
