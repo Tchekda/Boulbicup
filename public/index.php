@@ -51,7 +51,8 @@ try {
         array('POST', '/ajax/admin/tournament/delete/[i:id]', array(TournamentController::class, 'ajaxTournamentDelete'), 'ajax_admin_tournament_delete'),
         array('POST', '/ajax/admin/team/delete/[i:id]', array(TeamController::class, 'ajaxTeamDelete'), 'ajax_admin_team_delete'),
         array('POST', '/ajax/admin/pool/delete/[i:id]', array(TeamController::class, 'ajaxPoolDelete'), 'ajax_admin_pool_delete'),
-
+        array('POST', '/ajax/admin/user/add', array(AdminController::class, 'ajaxUserAdd'), 'ajax_admin_user_add'),
+        array('POST', '/ajax/admin/user/delete/[i:id]', array(AdminController::class, 'ajaxUserDelete'), 'ajax_admin_user_delete'),
         array('POST', '/ajax/admin/matchs/pool/edit/[i:id]', array(MatchController::class, 'ajaxPoolMatchEdit'), 'ajax_admin_pool_match_edit'),
         array('POST', '/ajax/admin/matchs/recalculate/[i:id]', array(MatchController::class, 'ajaxRecalcutatePoints'), 'ajax_admin_match_recalculate'),
     ));

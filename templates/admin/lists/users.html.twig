@@ -2,27 +2,103 @@
 {% block title %}Utilisateurs{% endblock %}
 {% block body %}
     <div class="center">
-        <a class="btn green" href="{{ path('admin_tournament_new') }}">Ajouter un utilisateur</a>
+        <a class="btn green modal-trigger" href="#userModal">Ajouter un utilisateur</a>
     </div>
-    <table class="striped highlight centered responsive-table">
+    <table class="striped highlight centered responsive-table" id="userList">
         <thead>
         <tr>
             <th>ID</th>
             <th>Nom d'Utilisateur</th>
-            <th>Editer</th>
             <th>Supprimer</th>
         </tr>
         </thead>
         <tbody>
         {% for user in users %}
-            <tr>
+            <tr id="user-{{ user.id }}">
                 <td>{{ user.id }}</td>
                 <td>{{ user.username }}</td>
-                <td><a href="#"><i class="fa fa-edit green-text"></i></a></td>
-                <td><a href="#"><i class="fa fa-ban red-text"></i></a></td>
+                <td><a href="{{ path('ajax_admin_user_delete', {'id': user.id}) }}" class="userDeleteLink"><i class="fa fa-ban red-text"></i></a></td>
             </tr>
         {% endfor %}
         </tbody>
-
     </table>
+
+    <!-- Modal Structure -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="center">
+                <h4>Ajouter un compte</h4>
+                <form action="{{ path("ajax_admin_user_add") }}" id="addUserForm" method="post">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input type="text" name="username" id="username" required>
+                            <label for="username">Nom d'Utilisateur</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col m6 s12">
+                            <input type="password" name="password" id="password" required>
+                            <label for="password">Mot de Passe</label>
+                        </div>
+                        <div class="input-field col m6 s12">
+                            <input type="password" name="password_second" id="password_second" required>
+                            <label for="password_second">Mot de Passe (Répéter)</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s4 push-s4">
+                            <button class="btn waves-effect waves-light green center" type="submit" name="action">
+                                Ajouter
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ (is_dev() ? "/js" : "https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2") }}/jquery.form.min.js"></script>
+    <script>
+        (function ($) {
+            $(function () {
+                let options = {
+                    success: function (data) {
+                        M.toast({html: 'Ajouté avec succès', classes: "green"});
+                        $("#userList tbody").append("<tr id='user-" + data['id'] + "'>"
+                            + "<td>" + data['id'] + "</td>"
+                            + "<td>" + data['username'] + "</td>"
+                            + "<td><a href=\"{{ path('ajax_admin_user_delete', {'id': user.id}) }}\" class=\"userDeleteLink\"><i class=\"fa fa-ban red-text\"></i></a></td>"
+                            + "</tr>");
+                        console.log(data)
+                    },
+                    error: function (data) {
+                        M.toast({html: data.responseText, classes: "red"});
+                        console.log(data.responseText)
+                    }
+                };
+                $('#addUserForm').ajaxForm(options);
+
+                $('.userDeleteLink').click(function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        url: $(this).attr('href'),
+                        method: 'POST',
+                        success: function (data) {
+                            M.toast({html: 'Supprimé avec succès', classes: "green"});
+                            $('#user-' + data['id']).remove();
+                        },
+                        error: function (data) {
+                            console.log(data);
+                            M.toast({html: data, classes: "red"});
+                        }
+                    });
+                    return false; // for good measure
+                });
+            }); // end of document ready
+        })(jQuery); // end of jQuery name space
+    </script>
 {% endblock %}
