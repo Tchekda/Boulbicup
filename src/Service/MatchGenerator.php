@@ -34,9 +34,12 @@ class MatchGenerator {
     public function generateTournamentMatchs() {
         $matches = $this->generatePoolMatchs();
 
-        foreach ($this->generateRankingReferenceMatchs() as $match) {
-            $matches[] = $match;
+        if (count($this->tournament->getPools()) > 1){
+            foreach ($this->generateRankingReferenceMatchs() as $match) {
+                $matches[] = $match;
+            }
         }
+
 
         $matchsEntities = array();
         $previousGameTime = $this->tournament->getStartDatetimeFirstday();
@@ -162,6 +165,57 @@ class MatchGenerator {
                     "V(PO6)",
                     "1-2"
                 );
+            }elseif (count($this->tournament->getTeams()) == 8) { // When 4 teams per pool
+
+                $matchs[] = array(
+                    "3:" . $this->tournament->getPools()[0]->getId(),
+                    "4:" . $this->tournament->getPools()[1]->getId(),
+                    "PO1"
+                );
+
+                $matchs[] = array(
+                    "4:" . $this->tournament->getPools()[0]->getId(),
+                    "3:" . $this->tournament->getPools()[1]->getId(),
+                    "PO2"
+                );
+
+                $matchs[] = array(
+                    "1:" . $this->tournament->getPools()[0]->getId(),
+                    "2:" . $this->tournament->getPools()[1]->getId(),
+                    "PO3"
+                );
+
+                $matchs[] = array(
+                    "2:" . $this->tournament->getPools()[0]->getId(),
+                    "1:" . $this->tournament->getPools()[1]->getId(),
+                    "PO4"
+                );
+
+
+                $matchs[] = array(
+                    "L(PO1)",
+                    "L(PO2)",
+                    "7-8"
+                );
+
+                $matchs[] = array(
+                    "V(PO1)",
+                    "V(PO2)",
+                    "5-6"
+                );
+
+                $matchs[] = array(
+                    "L(PO3)",
+                    "L(PO4)",
+                    "3-4"
+                );
+
+                $matchs[] = array(
+                    "V(PO3)",
+                    "V(PO4)",
+                    "1-2"
+                );
+
             }
 
         }
