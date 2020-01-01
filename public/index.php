@@ -47,6 +47,7 @@ try {
         array('GET', '/admin/matchs/pool/generate/[i:id]', array(MatchController::class, 'generatePoolMatchs'), 'admin_pool_match_generate'),
         array('GET', '/admin/matchs/ranking/generate/[i:id]', array(MatchController::class, 'generateRankingMatchs'), 'admin_ranking_match_generate'),
         // AJAX
+        array('GET', '/ajax/tournament/update/[i:id]', array(HomeController::class, 'ajaxTournamentUpdate'), 'ajax_tournament_update'),
         array('POST', '/ajax/admin/tournament/delete/[i:id]', array(TournamentController::class, 'ajaxTournamentDelete'), 'ajax_admin_tournament_delete'),
         array('POST', '/ajax/admin/team/delete/[i:id]', array(TeamController::class, 'ajaxTeamDelete'), 'ajax_admin_team_delete'),
         array('POST', '/ajax/admin/pool/delete/[i:id]', array(TeamController::class, 'ajaxPoolDelete'), 'ajax_admin_pool_delete'),

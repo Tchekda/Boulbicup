@@ -345,7 +345,7 @@ class MatchGenerator {
         }
 
         foreach ($this->tournament->getMatchs() as $match) {
-            if ($match->getState() == Match::STATE_FINISHED) {
+            if ($match->getState() == Match::STATE_FINISHED and $match->getType() == Match::TYPE_POOL) {
                 if ($match->getHostScore() > $match->getAwayScore()) {
                     $match->getHost()->addPoints(3);
                     $match->getAway()->addPoints(1);

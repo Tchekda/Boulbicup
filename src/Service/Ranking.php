@@ -75,7 +75,9 @@ class Ranking {
                         'id' => $team->getId(),
                         'name' => $team->getName(),
                         'points' => $team->getPoints(),
-                        'pool' => $team->getPool()->getName()
+                        'pool' => $team->getPool()->getName(),
+                        'rank' => intval(array_search($team, $teams)) + 1,
+                        'pool_id' => $team->getPool()->getId()
                     );
                 }
             }
@@ -84,12 +86,14 @@ class Ranking {
             usort($teams, function ($a, $b) {
                 return $a->getFinalRanking() > $b->getFinalRanking();
             });
+            /** @var Team $team */
             foreach ($teams as $team) {
                 $result[$team->getPool()->getName()][] = array(
                     'id' => $team->getId(),
                     'name' => $team->getName(),
                     'points' => $team->getPoints(),
-                    'pool' => $team->getPool()->getName()
+                    'pool' => $team->getPool()->getName(),
+                    'pool_id' => $team->getPool()->getId()
                 );
                 $result['all'][] = array(
                     'name' => $team->getName(),

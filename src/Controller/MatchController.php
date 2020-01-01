@@ -105,6 +105,17 @@ class MatchController extends BaseController {
                 }
                 if ($match->getState() <= Match::STATE_EXPECTED) {
                     $match->setState(Match::STATE_IN_PROGRESS);
+                    foreach ($tournament->getMatchs() as $tournament_matchs){
+                        if ($tournament_matchs->getState() == Match::STATE_IN_PROGRESS and $tournament_matchs->getId() != $match->getId()){
+                            if ($tournament->getState() <= Tournament::STATE_PRE_RANKING_PHASE){
+                                $tournament_matchs->setState(Match::STATE_FINISHED);
+                            }else {
+                                header('HTTP/1.0 403 Forbidden');
+                                echo "You need to finish the previous game";
+                                exit();
+                            }
+                        }
+                    }
                 }
                 if ($previousState != $match->getState() && $match->getState() == Match::STATE_FINISHED) { // Game had just finished
                     if ($match->getType() == Match::TYPE_POOL) {

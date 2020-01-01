@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Entity\Tournament;
 use Entity\User;
 use Service\App;
+use Service\MatchGenerator;
 use Service\Ranking;
 
 require '../vendor/autoload.php';
@@ -43,19 +44,66 @@ class HomeController extends BaseController {
         echo $this->twig->render('home/index.html.twig', $template_params);
     }
 
+    /**
+     * @param string $tournamentID
+     * Displays all data about a specific tournament
+     */
     public function tournamentShow(string $tournamentID) {
         /** @var Tournament $tournament */
         if ($tournament = $this->entityManager->getRepository('Entity\\Tournament')->find(intval($tournamentID))) {
             $ranking = new Ranking($tournament);
-
+            $matchs = array();
+            foreach ($tournament->getMatchs() as $match) {
+                $matchs[$match->getTime()->format('l j')][] = $match;
+            }
             $ranked_teams = $ranking->getStandardisedData();
+//            dd($ranked_teams);
             echo $this->twig->render('home/tournament.html.twig', [
                 'tournaments' => $this->entityManager->getRepository('Entity\\Tournament')->findAll(),
                 'tournament' => $tournament,
-                'ranked_teams' => $ranked_teams
+                'ranked_teams' => $ranked_teams,
+                'matchs' => $matchs
             ]);
         } else {
             header('Location: ' . $this->router->generate('homepage'));
+        }
+    }
+
+    /**
+     * @param string $tournamentID
+     * Gives all needed data in JSON about a tournament
+     */
+    public function ajaxTournamentUpdate(string $tournamentID){
+        /** @var Tournament $tournament */
+        if ($tournament = $this->entityManager->getRepository('Entity\\Tournament')->find(intval($tournamentID))) {
+            $matchGenerator = new MatchGenerator($this->entityManager, $tournament);
+            $matchGenerator->recalculatePoints();
+
+            $ranking = new Ranking($tournament);
+            $ranked_teams = $ranking->getStandardisedData();
+
+            $matchs = array();
+            foreach ($tournament->getMatchs() as $match){
+                $matchs[] = MatchGenerator::standardiseMatchData($match);;
+            }
+
+            $state = $tournament->getStateName();
+
+            $data = [
+               'matchs' => $matchs,
+               'ranking' => $ranked_teams,
+               'state' => $state
+            ];
+
+
+            header('HTTP/1.0 200 OK');
+            header('Content-Type: application/json');
+            echo json_encode($data);
+
+        } else {
+            header('HTTP/1.0 404 Not Found');
+            echo 'Tournament Not Found';
+            exit();
         }
     }
 

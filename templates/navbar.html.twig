@@ -1,7 +1,7 @@
 <!-- Dropdown Structure -->
 <ul id="dropdown" class="dropdown-content">
-    {% for tournament in tournaments %}
-        <li><a href="{{ path('tournament_show', {'id': tournament.id}) }}">{{ tournament.name }} U{{ tournament.category }} ({{ tournament.startdatetime|date('Y') }})</a></li>
+    {% for nav_tournament in tournaments %}
+        <li><a href="{{ path('tournament_show', {'id': nav_tournament.id}) }}">{{ nav_tournament.name }} U{{ nav_tournament.category }} ({{ nav_tournament.startdatetimefirstday|date('Y') }})</a></li>
     {% else %}
         <li><a href="#">Aucun tournoi</a></li>
     {% endfor %}
